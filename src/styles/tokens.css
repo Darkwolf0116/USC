@@ -1,0 +1,127 @@
+@theme static {
+  /* Type scale (1.25 ratio from a 16px body) and role sizes. */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-card-title: 1.0625rem;
+  --text-brand: clamp(0.8125rem, 0.4vw + 0.7rem, 1.0625rem);
+  --text-hero: clamp(2.125rem, 3.2vw + 0.75rem, 3.75rem);
+  --text-section: clamp(1.625rem, 1.2vw + 1.2rem, 2.25rem);
+  --text-lead: clamp(1.0625rem, 0.35vw + 1rem, 1.3125rem);
+  --leading-body: 1.6;
+  --leading-head: 1.18;
+
+  /* Motion. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Brand palette from the brief. Gold is decorative or sits on navy only. */
+  --color-navy: #002b49;
+  --color-navy-2: #0b4067;
+  --color-health: #0077b6;
+  --color-gold: #d4af37;
+  --color-gold-2: #e3c35d;
+  --color-gold-ink: #8a6d12;
+
+  /* Surfaces and ink on light paper. */
+  --color-paper: #f8fafc;
+  --color-paper-2: #eef3f8;
+  --color-surface: #ffffff;
+  --color-ink: #0f1e2e;
+  --color-ink-2: #2b3e52;
+  --color-muted: #4a5d70;
+  --color-field-edge: #6f8296;
+  --color-rule: #d5dee8;
+
+  /* Text and rules on navy. */
+  --color-on-navy: #ffffff;
+  --color-on-navy-muted: #c8d6e3;
+  --color-rule-on-navy: #2a5576;
+
+  /* Roles the Hallmark base rules read. */
+  --color-accent: var(--color-gold);
+  --color-accent-ink: var(--color-navy);
+  --color-focus: var(--color-health);
+  --color-focus-on-dark: var(--color-gold);
+  --color-error: #b3261e;
+  --color-success: #1f6f43;
+
+  /* Baked background of the supplied logo file, so its tile blends with the image. */
+  --color-logo-bg: #182039;
+  --color-mark: #f6e7a8;
+  --color-scrim: rgb(0 20 36 / 0.64);
+
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-outlier: var(--font-body);
+
+  --radius-card: 8px;
+  --radius-control: 6px;
+  --radius-tile: 10px;
+  --radius-pill: 999px;
+  --shadow-card: none;
+  --shadow-pop: 0 1px 3px rgb(0 20 36 / 0.16);
+  --tracking-display: -0.015em;
+}
+
+:root {
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  --container: 1480px;
+  --gutter: 64px;
+  --gap-columns: 32px;
+  --section-gap-s: 96px;
+  --section-gap: 120px;
+
+  --header-height: 4.5rem;
+  --tile-height: 3.25rem;
+  --control-height: 2.75rem;
+  --viewer-max-w: 1100px;
+
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sticky-nav: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+  --rule-hair: 1px;
+}
+
+@media (max-width: 60rem) {
+  :root {
+    --gutter: 24px;
+    --section-gap-s: 72px;
+    --section-gap: 88px;
+  }
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --gutter: 16px;
+    --section-gap-s: 56px;
+    --section-gap: 72px;
+    --gap-columns: 16px;
+    --header-height: 4rem;
+    --tile-height: 2.75rem;
+  }
+}

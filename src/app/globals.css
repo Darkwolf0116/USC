@@ -1,0 +1,11 @@
+/* Hallmark · shape: Poster Shelf (sticky index beside a shelf of A3 miniatures) · genre: modern-minimal · theme: custom · job: visit · idea: "A reading room for the Physiotherapy program's course posters: institutional navy and gold frame a quiet shelf of A3 miniatures, one click from the full PDF." · vibe: "institutional, calm, academic, exact"
+ * paper: #F8FAFC · accent: #D4AF37 (on navy only) · display: Montserrat · body: Source Sans 3 · hero: left-aligned navy banner, headline and one sentence beside the accreditation badge · nav: sticky white bar, brand left, categories menu and search right · footer: navy, brand block, category links, project folders · imagery: the institutional logo and CSS poster miniatures · signature: the A3 poster miniature shelf with a native-dialog PDF reader
+ * axes: light/geometric-sans/chromatic-blue · posture: Committed navy bands (hero, footer, viewer header), gold stays a hairline and an icon colour · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, the shelf could be any poster gallery; led with the real course names and the A3 ratio of the actual PDFs */
+/* Hallmark · waive 47c · poster miniatures are decorative CSS thumbnails of the generated A3 PDFs, aria-hidden and replaced by real thumbnails when provided · the brief asks for a lightweight CSS miniature */
+/* Hallmark · waive 74 · #F8FAFC is the fixed page background of the institutional brief, so the poster shelf keeps it as paper · the brief names this swatch for the repository background */
+
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/base.css" layer(base);
+@import "../styles/components.css";
