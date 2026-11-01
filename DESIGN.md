@@ -96,6 +96,17 @@ Alignment: everything left-aligned; the hero is one text column beside the logo 
 4. Motion answers actions: one orchestrated hero entrance (fade and 8px rise), dialog scale .96 to 1 in 420ms (exit 220ms), reduced motion falls back to a short crossfade. Only transform and opacity.
 5. Keyboard and touch first: 44px targets, instant focus ring, tabs with arrow keys, Esc and backdrop close the viewer and focus returns to the trigger.
 
+## Assistant
+
+Floating virtual assistant (in-browser RAG, see README). It adds two floating layers and no new tokens.
+
+- Launcher: navy pill, bottom right, gold `Sparkles` icon and the label "Asistente" (icon only below 40rem), 48px high, `--z-sticky`, below the header and the modal viewer. Focus ring `--color-focus-on-dark`.
+- Panel: non-modal (so the modal PDF viewer opens above it), white surface with hairline border and `--shadow-pop`, the only shadow in the system, as for any floating layer. Desktop 26rem by up to 40rem; below 40rem a full-screen sheet (`100dvh`, page scroll locked, safe-area padding). Navy header with the gold icon, paper message area, white status and composer bands.
+- Messages: user bubbles navy, assistant bubbles white with hairline; sources are paper cards with `.hl` marked matches; citations `[n]` are text links in `--color-health` that focus their source. Gold is never text.
+- Motion: one enter animation (translateY 12px and opacity, 220ms, `.keep-motion`), crossfade under reduced motion. Streaming tokens never animate.
+- Keyboard and a11y: Enter sends, Shift+Enter breaks the line, Esc closes (focus returns to the launcher), composer focused on open, a polite live region announces only finished replies, all targets 44px.
+- States: checking, unsupported (explains why search mode is active), consent (one-time download size), downloading (progress bar with percent), ready, error with retry.
+
 ## Deviations from tool output
 
 - `design-system/fisioterapia-usc/MASTER.md` (ui-ux-pro-max) suggests sky blue and Crimson Pro. The brief fixes navy, health blue and gold with Montserrat and Source Sans 3, so the brief wins; the tool's contrast, focus and touch-target rules were applied.

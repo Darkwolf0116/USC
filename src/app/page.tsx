@@ -1,3 +1,6 @@
+import { AssistantLauncher } from "@/components/assistant/AssistantLauncher";
+import { AssistantPanel } from "@/components/assistant/AssistantPanel";
+import { AssistantProvider } from "@/components/assistant/AssistantProvider";
 import { CatalogProvider } from "@/components/catalog/CatalogProvider";
 import { CategoriesSection } from "@/components/catalog/CategoriesSection";
 import { Hero } from "@/components/layout/Hero";
@@ -16,6 +19,10 @@ export default function Home() {
       </main>
       <SiteFooter categories={categories} />
       <PdfViewerDialog />
+      <AssistantProvider>
+        <AssistantLauncher />
+        <AssistantPanel />
+      </AssistantProvider>
     </CatalogProvider>
   );
 }
