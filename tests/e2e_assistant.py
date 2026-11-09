@@ -41,7 +41,20 @@ def watch_console(page: Page, sink: list[str]) -> None:
     page.on("pageerror", lambda err: sink.append(f"pageerror: {err}"))
 
 
+def grant_access(page: Page) -> None:
+    """The site is gated: register a test visit (fake Supabase from scripts/dev-e2e.mjs) once per context."""
+    if any(cookie["name"] == "usc_access" for cookie in page.context.cookies()):
+        return
+    response = page.request.post(
+        BASE_URL + "/api/access",
+        data={"fullName": "Prueba Automatizada", "email": "e2e@usc.edu.co"},
+    )
+    if not response.ok:
+        raise RuntimeError(f"Could not get access: {response.status} {response.text()}")
+
+
 def open_home(page: Page) -> None:
+    grant_access(page)
     page.goto(BASE_URL, wait_until="networkidle")
     page.wait_for_selector("#categorias .tab")
 

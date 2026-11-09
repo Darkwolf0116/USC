@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { ACCESS_PATH } from "@/lib/auth/redirect";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { VISITOR_NAME_COOKIE } from "@/lib/auth/session";
 
 type UserMenuVariant = "header" | "drawer";
 
@@ -12,32 +12,34 @@ const VARIANT_CLASS: Record<UserMenuVariant, string> = {
   drawer: "user-menu user-menu--drawer",
 };
 
-function firstName(fullName: unknown, email: string | undefined): string {
-  if (typeof fullName === "string" && fullName.trim()) return fullName.trim().split(/\s+/)[0];
-  return email?.split("@")[0] ?? "";
+function readVisitorName(): string {
+  const entry = document.cookie.split("; ").find((cookie) => cookie.startsWith(`${VISITOR_NAME_COOKIE}=`));
+  if (!entry) return "";
+  try {
+    return decodeURIComponent(entry.slice(VISITOR_NAME_COOKIE.length + 1));
+  } catch {
+    return "";
+  }
 }
 
-/** Signed-in visitor's first name and the "Salir" action. */
+/** Visitor's first name and the "Salir" action. */
 export function UserMenu({ variant }: { variant: UserMenuVariant }) {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    const supabase = getSupabaseBrowserClient();
-    if (!supabase) return;
-    let active = true;
-    supabase.auth.getUser().then(({ data }) => {
-      if (active && data.user) setName(firstName(data.user.user_metadata?.full_name, data.user.email));
-    });
-    return () => {
-      active = false;
-    };
+    // The cookie only exists in the browser, so it is read after hydration.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setName(readVisitorName());
   }, []);
 
   const signOut = async () => {
     setBusy(true);
-    await getSupabaseBrowserClient()?.auth.signOut();
-    window.location.assign(ACCESS_PATH);
+    try {
+      await fetch("/api/access", { method: "DELETE" });
+    } finally {
+      window.location.assign(ACCESS_PATH);
+    }
   };
 
   return (

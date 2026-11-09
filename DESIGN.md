@@ -114,4 +114,4 @@ Floating virtual assistant (in-browser RAG, see README). It adds two floating la
 
 ## Access page
 
-`/acceso` is a single navy page with one white card (hairline border, no shadow): brand band in `--color-navy-2` with the logo tile and a gold rule, then a two-step form (details, then the 6-digit code). Labels are always visible, errors sit under their field (`aria-describedby`, `aria-invalid`) in `--color-error`, and a polite live region announces progress. The signed-in user's first name and "Salir" live in the header tools and at the bottom of the mobile drawer.
+`/acceso` is a single navy page with one white card (hairline border, no shadow): brand band in `--color-navy-2` with the logo tile and a gold rule, then a one-step form (full name and institutional email). Labels are always visible, errors sit under their field (`aria-describedby`, `aria-invalid`) in `--color-error`, and a polite live region announces progress. The signed-in user's first name and "Salir" live in the header tools and at the bottom of the mobile drawer.

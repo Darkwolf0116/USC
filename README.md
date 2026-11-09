@@ -98,11 +98,12 @@ Un modelo de 0,5 a 1,5 mil millones de parámetros puede equivocarse o ser impre
 
 ## Acceso con correo institucional (Supabase)
 
-Todo el sitio (página, PDF e índice del asistente) exige iniciar sesión. En `/acceso` la persona escribe su nombre completo y su correo `@usc.edu.co`, recibe un código de 6 dígitos y, al verificarlo, entra al repositorio. Cada ingreso queda registrado en Supabase (tablas `visitors` y `visit_logs`), exportable a CSV/Excel.
+Todo el sitio (página, PDF e índice del asistente) exige registrarse. En `/acceso` la persona escribe su nombre completo y su correo `@usc.edu.co` y entra de inmediato; el correo **no se verifica**. Cada ingreso queda registrado en Supabase (tablas `visitors` y `visit_logs`), exportable a CSV/Excel.
 
-- `src/proxy.ts` revisa la sesión en cada solicitud y redirige a `/acceso` si falta. Si las variables de Supabase no están configuradas, nadie entra.
-- El dominio se valida en el formulario y también en la base de datos (trigger en `auth.users`).
-- Pasos en el panel de Supabase (tablas, plantilla del correo con el código, SMTP propio, exportar): [`supabase/README.md`](supabase/README.md).
+- `POST /api/access` valida los datos, llama a la función `register_visit` de Supabase y, solo si el registro funcionó, guarda una cookie de acceso por 30 días. "Salir" la borra.
+- `src/proxy.ts` revisa esa cookie en cada solicitud y redirige a `/acceso` si falta.
+- El dominio se valida en el formulario, en el servidor y en la base de datos.
+- Pasos en el panel de Supabase (tablas, exportar, variables): [`supabase/README.md`](supabase/README.md).
 
 Para trabajar en local crea `.env.local` en la raíz (no se sube a git) a partir de `.env.example`:
 
@@ -113,16 +114,14 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave sb_publishable_ del proyecto>
 
 ## Pruebas
 
-Acceso (usa un proyecto Supabase falso y respuestas simuladas, no envía correos):
+Todas las pruebas usan `scripts/dev-e2e.mjs`, que levanta el sitio contra un Supabase falso local (no toca el proyecto real). Las del catálogo y del asistente se registran primero con un correo de prueba.
 
 ```bash
 python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_auth.py
 ```
 
-Las pruebas del catálogo y del asistente necesitan una sesión válida, porque el sitio está protegido. Ejecútalas con una sesión real iniciada o contra una versión sin `src/proxy.ts`.
-
 ```bash
-python .agents/skills/webapp-testing/scripts/with_server.py --server "npm run dev" --port 3000 --timeout 120 -- python tests/e2e_catalog.py
+python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_catalog.py
 ```
 
 Verifica pestañas, URL, búsqueda, visor de PDF, descargas, respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
@@ -130,7 +129,7 @@ Verifica pestañas, URL, búsqueda, visor de PDF, descargas, respaldo del logoti
 Para el asistente (en Chromium sin WebGPU valida el modo búsqueda, las intenciones y las acciones sobre las fuentes):
 
 ```bash
-python .agents/skills/webapp-testing/scripts/with_server.py --server "npm run dev" --port 3000 --timeout 180 -- python tests/e2e_assistant.py
+python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_assistant.py
 ```
 
 ## Despliegue en Vercel
