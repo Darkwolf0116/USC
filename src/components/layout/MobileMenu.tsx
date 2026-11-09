@@ -2,6 +2,7 @@
 
 import { useId, useRef, type MouseEvent } from "react";
 import { Menu, X } from "lucide-react";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { useCatalog } from "@/components/catalog/CatalogProvider";
 import { CategoryLink } from "@/components/catalog/CategoryLink";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
@@ -70,6 +71,7 @@ export function MobileMenu() {
               </li>
             ))}
           </ul>
+          <UserMenu variant="drawer" />
         </div>
       </dialog>
     </>

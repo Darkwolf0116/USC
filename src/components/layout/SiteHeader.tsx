@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UserMenu } from "@/components/auth/UserMenu";
 import { BrandLogo } from "./BrandLogo";
 import { CategoryMenu } from "./CategoryMenu";
 import { MobileMenu } from "./MobileMenu";
@@ -17,6 +18,7 @@ export function SiteHeader() {
         <div className="site-header__tools">
           <CategoryMenu />
           <SearchField variant="header" />
+          <UserMenu variant="header" />
         </div>
         <MobileMenu />
       </div>

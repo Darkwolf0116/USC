@@ -1818,3 +1818,154 @@
 .assistant__input:focus-visible {
   outline-color: var(--ring, var(--color-focus));
 }
+
+/* ---------------------------------------------------------------------------
+   Access gate (/acceso) and signed-in user menu
+   --------------------------------------------------------------------------- */
+
+.access {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: var(--space-xl) var(--gutter);
+  background: var(--color-navy);
+}
+
+.access__card {
+  width: min(100%, 30rem);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-rule-on-navy);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.access__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-navy-2);
+  border-bottom: 2px solid var(--color-gold);
+  color: var(--color-on-navy);
+}
+
+.access__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+.access__subtitle {
+  margin: var(--space-3xs) 0 0;
+  color: var(--color-on-navy-muted);
+  font-size: var(--text-sm);
+}
+
+.access__body {
+  padding: var(--space-lg);
+}
+
+.access__form {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.access__lead {
+  margin: 0;
+  color: var(--color-ink-2);
+}
+
+.access__field {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.access__label {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.access__input {
+  min-height: var(--control-height);
+  width: 100%;
+  min-width: 0;
+  padding: 0 var(--space-sm);
+  border: 1px solid var(--color-field-edge);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font: inherit;
+}
+
+.access__input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.access__input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.access__input--code {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: 0.4em;
+  font-variant-numeric: tabular-nums;
+}
+
+.access__hint,
+.access__note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.access__error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.access__alert {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-control);
+  color: var(--color-error);
+  background: var(--color-surface);
+}
+
+.access__submit {
+  width: 100%;
+  justify-content: center;
+}
+
+.access__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.user-menu__name {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.user-menu--drawer {
+  justify-content: space-between;
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-rule);
+}
