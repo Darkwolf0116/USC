@@ -9,11 +9,9 @@ function isPublicPath(pathname: string): boolean {
   return pathname === ACCESS_PATH || pathname.startsWith("/Info/");
 }
 
-function redirectTo(request: NextRequest, pathname: string, search = ""): NextResponse {
-  const url = request.nextUrl.clone();
-  url.pathname = pathname;
-  url.search = search;
-  return NextResponse.redirect(url);
+/** `path` is same-origin and may carry its own query (it comes from `safeNextPath`). */
+function redirectTo(request: NextRequest, path: string): NextResponse {
+  return NextResponse.redirect(new URL(path, request.nextUrl.origin));
 }
 
 /**
@@ -63,7 +61,7 @@ export default async function proxy(request: NextRequest) {
 
   if (!authorized) {
     const next = safeNextPath(`${pathname}${search}`);
-    return redirectTo(request, ACCESS_PATH, `?next=${encodeURIComponent(next)}`);
+    return redirectTo(request, `${ACCESS_PATH}?next=${encodeURIComponent(next)}`);
   }
 
   return response;

@@ -68,8 +68,9 @@ def check_validation(page) -> None:
     check("invalid email is marked aria-invalid", email.get_attribute("aria-invalid") == "true")
 
 
-def check_code_flow(page, otp_requests: list[dict]) -> None:
-    page.goto(BASE_URL + "/acceso?next=https://evil.example/steal")
+def check_code_flow(page, otp_requests: list[dict], next_param: str = "https://evil.example/steal") -> None:
+    otp_requests.clear()
+    page.goto(BASE_URL + "/acceso?next=" + next_param)
     page.wait_for_load_state("networkidle")
     page.get_by_label("Nombre completo").fill("  Laura   Camila Restrepo ")
     page.get_by_label("Correo institucional").fill("Laura.Restrepo@USC.edu.co")
@@ -153,6 +154,13 @@ def main() -> int:
         check_redirects(context.request)
         check_validation(page)
         check_code_flow(page, otp_requests)
+        # Regression: browsers strip tab/newline, so "/%09/evil.com" used to become "//evil.com".
+        for tricky in ["/%09/evil.example", "/%0A/evil.example", "/%5C%5Cevil.example"]:
+            check_code_flow(page, otp_requests, tricky)
+
+        response = context.request.get(BASE_URL + "/x?y=1", max_redirects=0)
+        location = response.headers.get("location", "")
+        check("redirect keeps the original query in next", "next=%2Fx%3Fy%3D1" in location, location)
 
         mobile = browser.new_context(viewport={"width": 375, "height": 812})
         mobile_page = mobile.new_page()

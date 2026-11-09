@@ -160,10 +160,9 @@ revoke all on function public.handle_new_visitor() from public, anon, authentica
 alter table public.visitors enable row level security;
 alter table public.visit_logs enable row level security;
 
-revoke all on public.visitors from anon;
-revoke all on public.visit_logs from anon;
-revoke insert, update, delete on public.visitors from authenticated;
-revoke insert, update, delete on public.visit_logs from authenticated;
+revoke all on public.visitors from anon, authenticated;
+revoke all on public.visit_logs from anon, authenticated;
+grant select on public.visitors to authenticated;
 
 drop policy if exists "Visitors read own row" on public.visitors;
 create policy "Visitors read own row"
