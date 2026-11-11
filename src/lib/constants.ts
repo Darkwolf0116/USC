@@ -1,2 +1,2 @@
-/** Id of the categories section, shared by the hero link, footer links and scroll helpers. */
+/** Id of the search results section shown in place of the page content while a query is active. */
 export const CATALOG_SECTION_ID = "categorias";
