@@ -20,10 +20,10 @@ Branch: feat/research-axes · Delivery: ask-on-risk · Tests: Python Playwright 
 | T2 | S1, S2, S3 | inline | done | 1c9a7dd, bb128de |
 | T3 | S2 | inline | done | ab00f93 |
 | T4 | S1–S5 | inline | done | ab44615, 0bc64a8 |
-| T5 | S1, S2, S3, S8 | delegated (context backstop) | pending | |
-| T6 | S6, S7 | delegated (context backstop) | pending | |
-| T7 | S1, S8 | delegated (context backstop) | pending | |
-| T8 | S1–S8 | delegated (context backstop) | pending | |
+| T5 | S1, S2, S3, S8 | delegated (context backstop) | done | b98bcb4, e77404e |
+| T6 | S6, S7 | delegated (context backstop) | done | 4505dc0 |
+| T7 | S1, S8 | delegated (context backstop) | done | 7c78233 |
+| T8 | S1–S8 | delegated (context backstop) | done | e77404e, 31a1190 |
 
 ## Log
 - L1 (2026-11-10, user, verbatim): "Acabo de agregar una carpeta que se llama ejes, con 4 sub carpetas, son 4 ejes en totales, por lo que necesito adicionar a la página 4 secciones, cada una para cada uno de los ejes y en esa sección subir esos pdf para que se puedan ver en la misma página, para este caso necesito que abajo de cada PDF esté el título del mismo, no usemos los nombres de los archivos que están mal, sino los que tiene cada PDF"
@@ -34,3 +34,5 @@ Branch: feat/research-axes · Delivery: ask-on-risk · Tests: Python Playwright 
 - L6 (decision): thumbnails use next/image `unoptimized` because `/_next/image` is excluded from the access proxy matcher and the WebP is already 480px; `selectCategory` now scrolls to `#eje-N` and sets the hash.
 - L7 (2026-11-10, user, verbatim): "No está mal, hagamos un cambio, en la página principal debemos poner el siguiente texto: \"Investigación en Fisioterapia en Acción. Explora las propuestas de innovación, emprendimiento, podcasts, cartillas y pósters científicos de nuestros estudiantes. Conoce los proyectos organizados en nuestros cuatro ejes: Innovación y Tecnología, Discapacidad y Procesos, Actividad Física y Salud, y Desarrollo del Movimiento Humano.\" abajo de ese texto poner el video que adjunté en la carpeta video, finalmente abajo 4 botones de cada uno de los ejes, al dar click a cada uno de los ejes me despliegue los respectivos pdf con botones de poder regresar a la página principal y navegar por toda la página en general"
 - L8: Plan approved: shared route-group layout `src/app/(site)/layout.tsx`, home `(site)/page.tsx` (intro + video + 4 axis buttons), axis pages `(site)/eje/[slug]` (static params). Video is H.264/AAC, 18 MB, copied to `public/video/introduccion.mp4`; `Video/` gitignored. Tasks: T5 layout + axis page, T6 home, T7 assistant/RAG navigation, T8 tests + docs.
+- L9 (verification, T5-T8): tsc, lint and `npm run build` clean (routes `/`, `/eje/[slug]` with eje-1..eje-4 prerendered, `/acceso`, `/api/access`). e2e_axes 138 PASS, e2e_assistant 40 PASS, e2e_auth 0 failures, against `node scripts/dev-e2e.mjs`. RAG index rebuilt (274 chunks, SCRIPT_VERSION 3).
+- L10 (decisions): `params` is read inside `<Suspense>` on the axis page (awaiting it outside made client navigation fail in dev with an instant-navigation error), so an unknown slug such as `/eje/eje-9` renders the not-found UI with a noindex meta but HTTP 200, not 404. Previous/next axis are disabled (not wrapped) at the ends. `with_server.py` can hang because the dev server's verbose output fills its unread stdout pipe; runs were done with the server started separately and logs redirected to a file.
