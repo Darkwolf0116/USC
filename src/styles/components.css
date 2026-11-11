@@ -626,9 +626,8 @@
 
 /* Poster card: preview, title below it, actions. One flat layer, hairline preview border */
 .poster-card {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-sm);
   min-width: 0;
   height: 100%;
@@ -681,8 +680,9 @@
 .poster-card__actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: end;
   gap: var(--space-xs);
+  margin-block-start: auto;
+  padding-block-start: var(--space-2xs);
 }
 
 .poster-card__actions .btn {
