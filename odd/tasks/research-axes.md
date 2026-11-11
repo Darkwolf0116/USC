@@ -13,13 +13,15 @@ Branch: feat/research-axes · Delivery: ask-on-risk · Tests: Python Playwright 
 ## Tasks
 | ID | Specs | Route | Status | Commit |
 |----|-------|-------|--------|--------|
-| T1 | S2, S4, S5 | inline | in progress | |
-| T2 | S1, S2, S3 | inline | pending | |
-| T3 | S2 | inline | pending | |
-| T4 | S1–S5 | inline | pending | |
+| T1 | S2, S4, S5 | inline | done | feat(axes): import research-axis PDFs and drop mock posters |
+| T2 | S1, S2, S3 | inline | done | e78e1aa, 02d567e |
+| T3 | S2 | inline | done | fc0e16f |
+| T4 | S1–S5 | inline | done | 323a375, 386fc9c |
 
 ## Log
 - L1 (2026-11-10, user, verbatim): "Acabo de agregar una carpeta que se llama ejes, con 4 sub carpetas, son 4 ejes en totales, por lo que necesito adicionar a la página 4 secciones, cada una para cada uno de los ejes y en esa sección subir esos pdf para que se puedan ver en la misma página, para este caso necesito que abajo de cada PDF esté el título del mismo, no usemos los nombres de los archivos que están mal, sino los que tiene cada PDF"
 - L2 (2026-11-10, user, verbatim): "Veo que los nombres sí son los que corresponden a los póster, dejemos esos títulos pero quitémosles los caracteres"
 - L3 (2026-11-10, user choice): "Reemplazarlas por los ejes (Recommended)"
 - L4: Inventory: 53 PDFs (51 MB): Eje 1 = 25 (24 image-only with metadata titles), Eje 2 = 13, Eje 3 = 12, Eje 4 = 3. Truncated names completed from poster text: "Adaptaciones cardiovasculares inducidas por la actividad física y el ejercicio: beneficios, recomendaciones y prevención del riesgo cardiovascular"; "EFECTOS DE LA REHABILITACIÓN CARDÍACA BASADA EN EJERCICIO FÍSICO SOBRE LA CAPACIDAD FUNCIONAL EN PERSONAS ADULTAS CON INSUFICIENCIA CARDÍACA". Windows-replaced colons ("X- Y") are restored to "X: Y".
+- L5 (verification): tsc and lint clean; `npm run build` ok (routes /, /_not-found, /acceso, /api/access). e2e_axes 73 PASS, e2e_assistant 38 PASS, e2e_auth 0 failures, all against `node scripts/dev-e2e.mjs`. RAG index rebuilt: 272 chunks.
+- L6 (decision): thumbnails use next/image `unoptimized` because `/_next/image` is excluded from the access proxy matcher and the WebP is already 480px; `selectCategory` now scrolls to `#eje-N` and sets the hash.
