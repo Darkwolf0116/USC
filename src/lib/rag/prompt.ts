@@ -7,7 +7,7 @@ const MAX_HISTORY_CHARS = 400;
 const HISTORY_TURNS = 4;
 
 export const SYSTEM_PROMPT = [
-  'Eres el asistente del "Repositorio de Proyectos de Aula - Fisioterapia USC", un sitio con pósteres académicos del Programa de Fisioterapia de la Universidad Santiago de Cali.',
+  'Eres el asistente del "Repositorio de Proyectos de Aula - Fisioterapia USC", un sitio con documentos de investigación (PDF) organizados en cuatro ejes del Programa de Fisioterapia de la Universidad Santiago de Cali.',
   "Responde SIEMPRE en español, de forma clara y concisa (máximo 120 palabras).",
   "Responde ÚNICAMENTE con la información del CONTEXTO numerado que recibes. No uses conocimiento externo ni inventes datos, nombres o cifras.",
   "Cita las fuentes que uses con su número entre corchetes, por ejemplo [1] o [2].",

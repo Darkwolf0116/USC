@@ -30,9 +30,9 @@ import { useAssistant, type AssistantMessage } from "./AssistantProvider";
 
 const TITLE_ID = "asistente-titulo";
 const SUGGESTIONS = [
-  "¿Qué pósteres hay sobre la marcha?",
-  "Llévame a Práctica Infancia",
-  "¿Quién asesora los proyectos cardiopulmonares?",
+  "¿Qué pósteres hay sobre caídas en adultos mayores?",
+  "Llévame al Eje 3",
+  "¿Qué trabajos tratan sobre el ACV?",
 ];
 const PRIVACY_NOTE = "Tus preguntas se procesan en tu dispositivo; no se envían a ningún servidor.";
 
@@ -284,7 +284,7 @@ function ModelConsent({ size, onAccept, onCancel }: ModelConsentProps) {
       </h3>
       <p>
         Se descargará una sola vez un modelo de lenguaje ({size}) que se guarda en la memoria de tu navegador. Después
-        responde redactando con los pósteres, sin enviar nada a un servidor. Requiere un equipo con tarjeta gráfica
+        responde redactando con los documentos, sin enviar nada a un servidor. Requiere un equipo con tarjeta gráfica
         compatible; si usas datos móviles, la descarga puede consumir tu plan.
       </p>
       <div className="assistant__consent-actions">
@@ -344,8 +344,8 @@ export function AssistantMessages() {
         {messages.length === 0 ? (
           <div className="assistant__empty">
             <p className="assistant__greeting">
-              Hola, soy el asistente del repositorio. Puedo responder preguntas sobre los pósteres, citar sus fuentes
-              y llevarte a una categoría o a un PDF.
+              Hola, soy el asistente del repositorio. Puedo responder preguntas sobre los documentos, citar sus fuentes
+              y llevarte a un eje o a un PDF.
             </p>
             <ul className="assistant__chips" aria-label="Preguntas sugeridas">
               {SUGGESTIONS.map((suggestion) => (
@@ -470,7 +470,7 @@ function SourceItem({ source, message }: { source: RetrievedSource; message: Ass
               onClick={() => actions.goToCategory(chunk.categorySlug as string)}
             >
               <FolderOpen size={16} aria-hidden="true" />
-              Ir a la categoría
+              Ir al eje
               <span className="visually-hidden">: {chunk.title}</span>
             </button>
           ) : null}

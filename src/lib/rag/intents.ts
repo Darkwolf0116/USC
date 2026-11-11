@@ -13,7 +13,8 @@ const SEARCH_VERB = /^(?:buscar|busca|buscame|buscanos|encuentra|encuentrame)\s+
 const GO_VERB = /^(?:llevame|lleva|llevanos|ir|ve|vamos|navega|dirigeme)\s+(?:a|al|hacia|hasta)\s+(.+)$/;
 const OPEN_VERB = /^(?:abre|abrir|abreme|muestrame|muestra|mostrar|ver|ensename|ensenar)\s+(.+)$/;
 
-const CATEGORY_HINT = /\b(?:categoria|categorias|seccion|pestana|area)\b/g;
+const CATEGORY_HINT = /\b(?:eje|ejes|categoria|categorias|seccion|pestana|area)\b/g;
+const AXIS_NUMBER = /\beje\s*(?:numero\s*|n\s*)?(\d{1,2})\b/;
 const POSTER_HINT = /\b(?:poster|posters|pdf|proyecto|proyectos|documento|articulo)\b/g;
 const FILLER = /\b(?:el|la|los|las|un|una|de|del|sobre|acerca|que|se|llama|llamado|titulado)\b/g;
 
@@ -45,6 +46,14 @@ function ranked<T>(
     .sort((a, b) => b.score - a.score);
 }
 
+/** "eje 3" -> the axis whose slug is `eje-3`, when it exists. */
+function axisAction(number: string, catalog: IntentCatalog): AssistantAction | null {
+  const slug = `eje-${Number(number)}`;
+  return catalog.categories.some((category) => category.slug === slug)
+    ? { type: "selectCategory", slug }
+    : null;
+}
+
 /**
  * Deterministic router for navigation commands ("llévame a…", "abre…", "buscar…").
  * Returns null for anything that looks like a question, so it goes through retrieval.
@@ -57,6 +66,10 @@ export function detectIntent(input: string, catalog: IntentCatalog): AssistantAc
     .replace(POLITE_PREFIX, "")
     .trim();
   if (!text) return null;
+
+  // "eje 2" on its own is a navigation request too.
+  const bareAxis = /^eje\s*(\d{1,2})$/.exec(text);
+  if (bareAxis) return axisAction(bareAxis[1], catalog);
 
   const search = SEARCH_VERB.exec(text);
   if (search) {
@@ -72,6 +85,12 @@ export function detectIntent(input: string, catalog: IntentCatalog): AssistantAc
   const open = go ? null : OPEN_VERB.exec(text);
   const rest = (go ?? open)?.[1];
   if (!rest) return null;
+
+  const axisNumber = AXIS_NUMBER.exec(rest);
+  if (axisNumber) {
+    const action = axisAction(axisNumber[1], catalog);
+    if (action) return action;
+  }
 
   const categoryHint = new RegExp(CATEGORY_HINT.source).test(rest);
   const posterHint = new RegExp(POSTER_HINT.source).test(rest);

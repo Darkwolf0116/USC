@@ -353,7 +353,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
         const category = categories.find((c) => c.slug === action.slug);
         catalogActions.selectCategory(action.slug, { scroll: true });
         minimizeOnMobile();
-        return `Listo, te llevé a la categoría «${category?.name ?? action.slug}».`;
+        return `Listo, te llevé al eje «${category ? `Eje ${category.number}: ${category.name}` : action.slug}».`;
       }
       if (action.type === "openPoster") {
         const poster = findPoster(action.slug);
@@ -361,7 +361,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
         const mobile = readMobile();
         if (mobile) setOpen(false);
         catalogActions.openViewer(poster, mobile ? launcherRef.current : trigger);
-        return `Abrí el póster «${poster.title}».`;
+        return `Abrí el documento «${poster.title}».`;
       }
       catalogActions.setQuery(action.query);
       minimizeOnMobile();

@@ -5,19 +5,20 @@
  *   public/rag/index.json   chunk metadata + text
  *   public/rag/vectors.bin  Float32 row-major embeddings, same order as `chunks`
  *
- * Sources: every PDF in public/posters, one chunk per catalog poster / category and a few
- * hand-written site help chunks. The index is skipped when nothing changed (hash of
+ * Sources: every PDF listed in catalog.json (public/ejes/eje-N/*.pdf), one chunk per catalog
+ * document / research axis and a few hand-written site help chunks. Image-only PDFs yield no
+ * text chunks (no OCR): the assistant only knows their title and axis. The index is skipped when nothing changed (hash of
  * catalog.json + PDF bytes + script version). Use `--force` to rebuild anyway.
  *
  * Runs automatically before `next build` (see the "prebuild" npm script).
  */
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const SCRIPT_VERSION = "1";
+const SCRIPT_VERSION = "2";
 const EMBEDDING_MODEL = "Xenova/multilingual-e5-small";
 const EMBEDDING_DIM = 384;
 const CHUNK_SIZE = 650;
@@ -26,7 +27,7 @@ const BATCH_SIZE = 16;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CATALOG_PATH = path.join(ROOT, "src", "data", "catalog.json");
-const POSTERS_DIR = path.join(ROOT, "public", "posters");
+const PUBLIC_DIR = path.join(ROOT, "public");
 const OUT_DIR = path.join(ROOT, "public", "rag");
 const INDEX_PATH = path.join(OUT_DIR, "index.json");
 const VECTORS_PATH = path.join(OUT_DIR, "vectors.bin");
@@ -43,29 +44,33 @@ function collapse(text) {
   return text.replace(/\s+/g, " ").trim();
 }
 
-function posterFileName(pdfPath) {
-  return path.basename(pdfPath).toLowerCase();
-}
-
 async function loadCatalog() {
   const raw = await readFile(CATALOG_PATH, "utf8");
   return JSON.parse(raw);
 }
 
-async function listPdfs() {
-  if (!existsSync(POSTERS_DIR)) return [];
-  const names = await readdir(POSTERS_DIR);
-  return names.filter((name) => name.toLowerCase().endsWith(".pdf")).sort();
+/** PDF paths ("/ejes/eje-1/x.pdf") listed in the catalog, in catalog order. */
+function listPdfs(catalog) {
+  return catalog.categories.flatMap((category) => category.posters.map((poster) => poster.pdf));
 }
 
-async function computeHash(catalog, pdfNames) {
+function pdfFile(pdfPath) {
+  return path.join(PUBLIC_DIR, ...pdfPath.split("/").filter(Boolean));
+}
+
+async function computeHash(catalog, pdfPaths) {
   const hash = createHash("sha256");
-  hash.update(`script:${SCRIPT_VERSION}\nmodel:${EMBEDDING_MODEL}\nchunk:${CHUNK_SIZE}/${CHUNK_OVERLAP}\n`);
+  hash.update(`script:${SCRIPT_VERSION}
+model:${EMBEDDING_MODEL}
+chunk:${CHUNK_SIZE}/${CHUNK_OVERLAP}
+`);
   // Re-serialize so CRLF/LF differences in the checkout never change the hash.
   hash.update(JSON.stringify(catalog));
-  for (const name of pdfNames) {
-    hash.update(`\n${name}\n`);
-    hash.update(await readFile(path.join(POSTERS_DIR, name)));
+  for (const pdfPath of pdfPaths) {
+    hash.update(`
+${pdfPath}
+`);
+    hash.update(await readFile(pdfFile(pdfPath)));
   }
   return hash.digest("hex");
 }
@@ -126,51 +131,48 @@ async function extractPdfPages(pdfjs, filePath) {
   return pages;
 }
 
-function posterIndex(catalog) {
-  const map = new Map();
-  for (const category of catalog.categories) {
-    for (const poster of category.posters) {
-      map.set(posterFileName(poster.pdf), { poster, category });
-    }
-  }
-  return map;
+function axisLabel(category) {
+  return `Eje ${category.number}: ${category.name}`;
 }
 
 function posterChunkText(poster, category) {
-  return collapse(
-    `${poster.title}. Estudiantes: ${poster.students.join(", ")}. Docente: ${poster.advisor}. ` +
-      `Semestre: ${poster.semester}. Categoría: ${category.name}. Resumen: ${poster.summary}`,
-  );
+  const pages = poster.pages === 1 ? "1 página" : `${poster.pages} páginas`;
+  return collapse(`${poster.title}. ${axisLabel(category)}. Documento PDF de ${pages}.`);
 }
 
 function pageChunks(catalog) {
   const total = catalog.categories.reduce((sum, c) => sum + c.posters.length, 0);
-  const names = catalog.categories.map((c) => c.name).join("; ");
+  const axes = catalog.categories.map(axisLabel).join("; ");
   const pages = [
     [
       "about",
       "¿Qué es este sitio?",
-      `Este sitio es el Repositorio de Proyectos de Aula del Programa de Fisioterapia, Facultad de Salud, Universidad Santiago de Cali (USC). Reúne ${total} pósteres académicos de proyectos de aula organizados en ${catalog.categories.length} categorías, con búsqueda, lectura del PDF dentro de la página y descarga directa.`,
+      `Este sitio es el Repositorio de Proyectos de Aula del Programa de Fisioterapia, Facultad de Salud, Universidad Santiago de Cali (USC). Reúne ${total} documentos de investigación en PDF organizados en ${catalog.categories.length} ejes, con búsqueda, lectura del PDF dentro de la página y descarga directa.`,
     ],
     [
-      "categories",
-      "Categorías del repositorio",
-      `Las categorías del repositorio son: ${names}. Cada categoría tiene su propia pestaña en la sección Pósteres por categoría.`,
+      "axes",
+      "Ejes de investigación",
+      `Los ejes de investigación son: ${axes}. Cada eje tiene su propia sección en la página, con la vista previa y el título de cada documento.`,
     ],
     [
       "search",
-      "Cómo buscar un póster",
-      "Para buscar un póster use el campo Buscar proyectos del encabezado: escriba parte del título, el nombre de un estudiante o del docente. La búsqueda ignora tildes y mayúsculas, y los resultados aparecen agrupados por categoría. También puede elegir una categoría desde el menú Categorías o desde las pestañas de la sección Pósteres por categoría.",
+      "Cómo buscar un documento",
+      "Para buscar un documento use el campo Buscar documentos del encabezado: escriba parte del título o el nombre de un eje. La búsqueda ignora tildes y mayúsculas, y los resultados aparecen agrupados por eje. También puede ir a un eje desde el menú Ejes del encabezado o desde los enlaces del pie de página.",
     ],
     [
       "pdf",
       "Cómo abrir y descargar un PDF",
-      "Cada tarjeta de póster tiene el botón Ver PDF completo, que abre el documento en un visor dentro de la página (se cierra con la tecla Esc), y el botón Descargar PDF, que guarda el archivo en su dispositivo.",
+      "Cada documento tiene una tarjeta con su vista previa y el título debajo. El botón Ver PDF abre el documento en un visor dentro de la página (se cierra con la tecla Esc) y el botón Descargar PDF guarda el archivo en su dispositivo.",
+    ],
+    [
+      "access",
+      "Cómo ingresar al sitio",
+      "Para ver el contenido se ingresa con el correo institucional, sin contraseña ni código de verificación. Solo se solicita la primera vez en cada navegador.",
     ],
     [
       "assistant",
       "Asistente virtual",
-      "El asistente virtual responde preguntas sobre los pósteres usando únicamente el contenido del repositorio y cita sus fuentes. Funciona en el dispositivo del visitante: las preguntas no se envían a ningún servidor. Con un navegador compatible con WebGPU puede activar la IA local (descarga única); en otros navegadores usa el modo búsqueda. También puede llevar al visitante a una categoría o abrir un póster.",
+      "El asistente virtual responde preguntas sobre los documentos usando únicamente el contenido del repositorio y cita sus fuentes. Funciona en el dispositivo del visitante: las preguntas no se envían a ningún servidor. Con un navegador compatible con WebGPU puede activar la IA local (descarga única); en otros navegadores usa el modo búsqueda. También puede llevar al visitante a un eje o abrir un documento. De los PDF compuestos solo por imágenes conoce únicamente el título.",
     ],
   ];
   return pages.map(([key, title, text]) => ({
@@ -181,9 +183,8 @@ function pageChunks(catalog) {
   }));
 }
 
-async function collectChunks(catalog, pdfNames) {
+async function collectChunks(catalog) {
   const chunks = [];
-  const byFile = posterIndex(catalog);
 
   chunks.push(...pageChunks(catalog));
 
@@ -192,9 +193,9 @@ async function collectChunks(catalog, pdfNames) {
     chunks.push({
       id: `catalog:category:${category.slug}`,
       text: collapse(
-        `Categoría ${category.name}. ${category.description} Pósteres de esta categoría (${category.posters.length}): ${titles}.`,
+        `${axisLabel(category)}. Documentos de este eje (${category.posters.length}): ${titles}.`,
       ),
-      title: category.name,
+      title: axisLabel(category),
       source: "catalog",
       categorySlug: category.slug,
     });
@@ -212,31 +213,37 @@ async function collectChunks(catalog, pdfNames) {
 
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
   let pdfChunkCount = 0;
-  for (const name of pdfNames) {
-    const entry = byFile.get(name.toLowerCase());
-    const title = entry ? entry.poster.title : name.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ");
-    let pages;
-    try {
-      pages = await extractPdfPages(pdfjs, path.join(POSTERS_DIR, name));
-    } catch (error) {
-      log(`warning: could not read ${name}: ${error instanceof Error ? error.message : error}`);
-      continue;
-    }
-    for (const page of pages) {
-      chunkText(page.text).forEach((text, index) => {
-        chunks.push({
-          id: `pdf:${name.replace(/\.pdf$/i, "")}:p${page.number}:${index}`,
-          text,
-          title,
-          source: "pdf",
-          ...(entry ? { posterSlug: entry.poster.slug, categorySlug: entry.category.slug } : {}),
-          page: page.number,
+  let pdfCount = 0;
+  let emptyCount = 0;
+  for (const category of catalog.categories) {
+    for (const poster of category.posters) {
+      pdfCount += 1;
+      let pages;
+      try {
+        pages = await extractPdfPages(pdfjs, pdfFile(poster.pdf));
+      } catch (error) {
+        log(`warning: could not read ${poster.pdf}: ${error instanceof Error ? error.message : error}`);
+        continue;
+      }
+      const before = pdfChunkCount;
+      for (const page of pages) {
+        chunkText(page.text).forEach((text, index) => {
+          chunks.push({
+            id: `pdf:${category.slug}:${poster.slug}:p${page.number}:${index}`,
+            text,
+            title: poster.title,
+            source: "pdf",
+            posterSlug: poster.slug,
+            categorySlug: category.slug,
+            page: page.number,
+          });
+          pdfChunkCount += 1;
         });
-        pdfChunkCount += 1;
-      });
+      }
+      if (pdfChunkCount === before) emptyCount += 1;
     }
   }
-  log(`${pdfNames.length} PDF files -> ${pdfChunkCount} text chunks`);
+  log(`${pdfCount} PDF files -> ${pdfChunkCount} text chunks (${emptyCount} without extractable text)`);
   return chunks;
 }
 
@@ -272,15 +279,14 @@ async function readExistingHash() {
 
 async function main() {
   const catalog = await loadCatalog();
-  const pdfNames = await listPdfs();
-  const hash = await computeHash(catalog, pdfNames);
+  const hash = await computeHash(catalog, listPdfs(catalog));
 
   if (!force && (await readExistingHash()) === hash) {
     log("index up to date");
     return;
   }
 
-  const chunks = await collectChunks(catalog, pdfNames);
+  const chunks = await collectChunks(catalog);
   let vectors;
   try {
     vectors = await embedChunks(chunks);
