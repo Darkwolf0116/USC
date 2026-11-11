@@ -13,10 +13,10 @@ Branch: feat/research-axes · Delivery: ask-on-risk · Tests: Python Playwright 
 ## Tasks
 | ID | Specs | Route | Status | Commit |
 |----|-------|-------|--------|--------|
-| T1 | S2, S4, S5 | inline | done | feat(axes): import research-axis PDFs and drop mock posters |
-| T2 | S1, S2, S3 | inline | done | e78e1aa, 02d567e |
-| T3 | S2 | inline | done | fc0e16f |
-| T4 | S1–S5 | inline | done | 323a375, 386fc9c |
+| T1 | S2, S4, S5 | inline | done | 133c4c3 |
+| T2 | S1, S2, S3 | inline | done | 1c9a7dd, bb128de |
+| T3 | S2 | inline | done | ab00f93 |
+| T4 | S1–S5 | inline | done | ab44615, 0bc64a8 |
 
 ## Log
 - L1 (2026-11-10, user, verbatim): "Acabo de agregar una carpeta que se llama ejes, con 4 sub carpetas, son 4 ejes en totales, por lo que necesito adicionar a la página 4 secciones, cada una para cada uno de los ejes y en esa sección subir esos pdf para que se puedan ver en la misma página, para este caso necesito que abajo de cada PDF esté el título del mismo, no usemos los nombres de los archivos que están mal, sino los que tiene cada PDF"
