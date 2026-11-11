@@ -12,7 +12,7 @@ interface ReactionBarProps {
   title: string;
 }
 
-/** Four reaction buttons with their totals; the visitor's own choice is pressed. */
+/** Two reaction buttons with their totals; the visitor's own choice is pressed. */
 export function ReactionBar({ variant, posterKey, title }: ReactionBarProps) {
   const { state, actions, meta } = useReactions();
   const counts = state.counts[posterKey] ?? emptyCounts();

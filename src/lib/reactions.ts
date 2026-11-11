@@ -1,6 +1,6 @@
 import { categories } from "@/data/catalog";
 
-export type ReactionKey = "love" | "clap" | "insight" | "inspire";
+export type ReactionKey = "love" | "clap";
 
 export interface ReactionDefinition {
   key: ReactionKey;
@@ -12,14 +12,12 @@ export interface ReactionDefinition {
 export const REACTIONS: readonly ReactionDefinition[] = [
   { key: "love", emoji: "❤️", label: "Me encanta" },
   { key: "clap", emoji: "👏", label: "Aplausos" },
-  { key: "insight", emoji: "💡", label: "Interesante" },
-  { key: "inspire", emoji: "✨", label: "Inspirador" },
 ];
 
 export type ReactionCounts = Record<ReactionKey, number>;
 
 export function emptyCounts(): ReactionCounts {
-  return { love: 0, clap: 0, insight: 0, inspire: 0 };
+  return { love: 0, clap: 0 };
 }
 
 export function isReactionKey(value: unknown): value is ReactionKey {

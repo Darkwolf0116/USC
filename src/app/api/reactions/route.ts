@@ -73,8 +73,6 @@ function toCounts(value: unknown): ReactionCounts | null {
   return {
     love: read("love"),
     clap: read("clap"),
-    insight: read("insight"),
-    inspire: read("inspire"),
   };
 }
 
