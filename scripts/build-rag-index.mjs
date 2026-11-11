@@ -18,7 +18,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const SCRIPT_VERSION = "2";
+const SCRIPT_VERSION = "3";
 const EMBEDDING_MODEL = "Xenova/multilingual-e5-small";
 const EMBEDDING_DIM = 384;
 const CHUNK_SIZE = 650;
@@ -152,12 +152,22 @@ function pageChunks(catalog) {
     [
       "axes",
       "Ejes de investigación",
-      `Los ejes de investigación son: ${axes}. Cada eje tiene su propia sección en la página, con la vista previa y el título de cada documento.`,
+      `Los ejes de investigación son: ${axes}. Cada eje tiene su propia página (Eje 1, Eje 2, Eje 3 y Eje 4), con la vista previa y el título de cada documento.`,
     ],
     [
       "search",
       "Cómo buscar un documento",
-      "Para buscar un documento use el campo Buscar documentos del encabezado: escriba parte del título o el nombre de un eje. La búsqueda ignora tildes y mayúsculas, y los resultados aparecen agrupados por eje. También puede ir a un eje desde el menú Ejes del encabezado o desde los enlaces del pie de página.",
+      "Para buscar un documento use el campo Buscar documentos del encabezado: escriba parte del título o el nombre de un eje. La búsqueda ignora tildes y mayúsculas, y los resultados aparecen agrupados por eje. Los resultados se muestran en la página donde esté, sea la principal o la de un eje; al borrar la búsqueda vuelve el contenido de esa página. También puede ir a un eje desde el menú Ejes del encabezado o desde los enlaces del pie de página.",
+    ],
+    [
+      "home",
+      "Página principal",
+      "La página principal presenta el texto Investigación en Fisioterapia en Acción, un video de presentación del Programa de Fisioterapia y, debajo, cuatro botones, uno por cada eje de investigación. Al hacer clic en un botón se abre la página de ese eje con sus documentos en PDF.",
+    ],
+    [
+      "navigation",
+      "Cómo moverse por el sitio y volver al inicio",
+      "Cada eje tiene su propia página con migas de pan, el botón Volver al inicio, los botones Eje anterior y Eje siguiente y enlaces a los cuatro ejes. Para volver a la página principal use Volver al inicio, la miga de pan Inicio o el logo del encabezado. El menú Ejes del encabezado y los enlaces del pie de página llevan a cualquier eje desde cualquier página.",
     ],
     [
       "pdf",
