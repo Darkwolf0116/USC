@@ -44,6 +44,18 @@ Crea:
 
 Hasta que ejecutes este script, la barra de reacciones del sitio aparece deshabilitada y no se guarda nada.
 
+### Actualización: detectar sesiones antiguas
+
+Después, ejecuta también [`migrations/20261111000000_reactions_visitor_flag.sql`](migrations/20261111000000_reactions_visitor_flag.sql) en el SQL Editor (también es seguro repetirlo). Agrega a `get_poster_reactions()` un indicador que dice si la persona de la cookie existe en `visitors`, y hace que la vista `poster_reaction_summary` use los permisos de quien la consulta (`security_invoker`).
+
+Con esto, si el navegador guarda una cookie de ingreso de una persona que ya no existe en la base (por ejemplo, tras cambiar de proyecto o limpiar la tabla), el sitio lo detecta, borra la cookie y muestra el aviso "Tu sesión expiró" con el botón **Ingresar de nuevo**.
+
+### Si una reacción no se guarda
+
+1. Pide a la persona que salga (**Salir**) y vuelva a ingresar con su correo. Eso registra de nuevo su visita y suele resolverlo.
+2. Revisa los registros del servidor en **Vercel → Project → Logs** y busca `set_poster_reaction failed` o `get_poster_reactions failed`: muestran el código y el mensaje de error de Supabase.
+3. Comprueba en el SQL Editor que existan las funciones: `select public.get_poster_reactions(null);` debe devolver `counts`, `mine` y `visitor`.
+
 ### Ver y exportar los totales de reacciones
 
 1. **Table Editor → Views → `poster_reaction_summary`** muestra los totales por póster, ordenados de más a menos reacciones.
