@@ -3,6 +3,8 @@
 // (`POST /rest/v1/rpc/<name>`) with the same rules as the real SQL functions, so no real
 // project or credentials are needed. State is in memory.
 // `GET /__calls` returns the RPC payloads received, for assertions.
+// `POST /__forget-visitor` with `{ "email": ... }` or `{ "visitor_id": ... }` deletes that visitor (and its
+// reactions), simulating an access cookie that points to a row Supabase no longer has.
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { randomUUID } from "node:crypto";
@@ -54,11 +56,28 @@ function getPosterReactions(payload, res) {
     if (byVisitor.size > 0) counts[key] = countsFor(key);
     if (known && byVisitor.has(visitorId)) mine[key] = byVisitor.get(visitorId);
   }
-  send(res, 200, { counts, mine });
+  send(res, 200, { visitor: Boolean(known), counts, mine });
 }
 
 const fake = createServer((req, res) => {
   if (req.method === "GET" && req.url === "/__calls") return send(res, 200, calls);
+
+  if (req.method === "POST" && req.url === "/__forget-visitor") {
+    let raw = "";
+    req.on("data", (chunk) => (raw += chunk));
+    req.on("end", () => {
+      const payload = JSON.parse(raw || "{}");
+      const email = String(payload.email ?? "").trim().toLowerCase();
+      const id = payload.visitor_id ?? visitorIds.get(email);
+      let removed = false;
+      for (const [key, value] of visitorIds) {
+        if (value === id) removed = visitorIds.delete(key);
+      }
+      for (const byVisitor of reactionsByPoster.values()) byVisitor.delete(id);
+      send(res, 200, { removed });
+    });
+    return;
+  }
 
   if (req.method === "POST" && req.url?.startsWith("/rest/v1/rpc/register_visit")) {
     let raw = "";
