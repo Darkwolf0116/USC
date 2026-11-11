@@ -1,8 +1,15 @@
-import { createClient } from "@supabase/supabase-js";
-import { NextResponse, type NextRequest } from "next/server";
-import { ACCESS_COOKIE, VISITOR_NAME_COOKIE, isVisitorId } from "@/lib/auth/session";
+import type { NextRequest } from "next/server";
 import { isKnownPosterKey, isReactionKey, type ReactionCounts, type ReactionKey } from "@/lib/reactions";
-import { getSupabaseEnv, type SupabaseEnv } from "@/lib/supabase/env";
+import { getSupabaseEnv } from "@/lib/supabase/env";
+import {
+  CHECK_VIOLATION,
+  isUnknownVisitorError,
+  json,
+  newClient,
+  staleVisitorResponse,
+  visitorIdOf,
+  type VisitorErrorCode,
+} from "@/lib/supabase/visitor";
 
 export interface ReactionsGetResponse {
   ok: boolean;
@@ -10,9 +17,11 @@ export interface ReactionsGetResponse {
   counts?: Record<string, ReactionCounts>;
   /** The visitor's own reaction per poster key. */
   mine?: Record<string, ReactionKey>;
+  /** Number of comments per poster key; posters without comments are absent. */
+  comments?: Record<string, number>;
   message?: string;
   /** `visitor_not_found`: the access cookie names a visitor Supabase does not know; the cookies were cleared. */
-  code?: ReactionsErrorCode;
+  code?: VisitorErrorCode;
 }
 
 export interface ReactionsPostResponse {
@@ -20,47 +29,7 @@ export interface ReactionsPostResponse {
   poster?: string;
   counts?: ReactionCounts;
   message?: string;
-  code?: ReactionsErrorCode;
-}
-
-export type ReactionsErrorCode = "visitor_not_found";
-
-const CHECK_VIOLATION = "23514";
-
-function json<T>(body: T, status: number): NextResponse<T> {
-  return NextResponse.json(body, {
-    status,
-    headers: { "Cache-Control": "no-store" },
-  });
-}
-
-const UNKNOWN_VISITOR_MESSAGE = "Visitante no valido";
-
-/** True only for the error `set_poster_reaction` raises when the visitor row does not exist. */
-function isUnknownVisitorError(error: { code?: string; message?: string }): boolean {
-  return error.code === CHECK_VIOLATION && (error.message ?? "").includes(UNKNOWN_VISITOR_MESSAGE);
-}
-
-/** 401 that also signs the browser out, so the next visit registers a fresh visitor. */
-function staleVisitorResponse<
-  T extends { ok: boolean; message?: string; code?: ReactionsErrorCode },
->(): NextResponse<T> {
-  const response = json(
-    {
-      ok: false,
-      code: "visitor_not_found",
-      message: "Tu sesión expiró. Vuelve a ingresar para reaccionar.",
-    } as T,
-    401,
-  );
-  response.cookies.delete(ACCESS_COOKIE);
-  response.cookies.delete(VISITOR_NAME_COOKIE);
-  return response;
-}
-
-function visitorIdOf(request: NextRequest): string | null {
-  const value = request.cookies.get(ACCESS_COOKIE)?.value;
-  return value && isVisitorId(value) ? value : null;
+  code?: VisitorErrorCode;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -74,12 +43,6 @@ function toCounts(value: unknown): ReactionCounts | null {
     love: read("love"),
     clap: read("clap"),
   };
-}
-
-function newClient(env: SupabaseEnv) {
-  return createClient(env.url, env.publishableKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
 }
 
 /** Totals per poster plus the reactions of the visitor identified by the access cookie. */
@@ -119,7 +82,14 @@ export async function GET(request: NextRequest) {
   for (const [key, value] of Object.entries(data.mine)) {
     if (isReactionKey(value)) mine[key] = value;
   }
-  return json<ReactionsGetResponse>({ ok: true, counts, mine }, 200);
+  const comments: Record<string, number> = {};
+  // `comments` is absent until the comments migration is applied; treat that as no comments.
+  if (isRecord(data.comments)) {
+    for (const [key, value] of Object.entries(data.comments)) {
+      if (typeof value === "number") comments[key] = value;
+    }
+  }
+  return json<ReactionsGetResponse>({ ok: true, counts, mine, comments }, 200);
 }
 
 /** Sets, switches or (with `reaction: null`) removes the visitor's reaction to one poster. */
