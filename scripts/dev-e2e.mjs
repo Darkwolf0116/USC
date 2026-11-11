@@ -1,6 +1,7 @@
 // Starts `next dev` against a local fake Supabase for the e2e suites.
-// The fake only implements `POST /rest/v1/rpc/register_visit` with the same
-// rules as the real SQL function, so no real project or credentials are needed.
+// The fake implements `register_visit`, `set_poster_reaction` and `get_poster_reactions`
+// (`POST /rest/v1/rpc/<name>`) with the same rules as the real SQL functions, so no real
+// project or credentials are needed. State is in memory.
 // `GET /__calls` returns the RPC payloads received, for assertions.
 import { spawn } from "node:child_process";
 import { createServer } from "node:http";
@@ -10,10 +11,50 @@ const FAKE_PORT = Number(process.env.FAKE_SUPABASE_PORT ?? 54329);
 const INSTITUTIONAL_EMAIL = /^[a-z0-9._%+-]+@usc\.edu\.co$/;
 const calls = [];
 const visitorIds = new Map();
+const REACTIONS = ["love", "clap", "insight", "inspire"];
+const POSTER_KEY = /^eje-[0-9]+\/[a-z0-9-]+$/;
+/** poster_key -> Map(visitor_id -> reaction) */
+const reactionsByPoster = new Map();
 
 function send(res, status, body) {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(body === undefined ? "" : JSON.stringify(body));
+}
+
+function countsFor(posterKey) {
+  const counts = Object.fromEntries(REACTIONS.map((reaction) => [reaction, 0]));
+  for (const reaction of reactionsByPoster.get(posterKey)?.values() ?? []) counts[reaction] += 1;
+  return counts;
+}
+
+function setPosterReaction(payload, res) {
+  const { p_visitor_id: visitorId, p_poster_key: key, p_reaction: reaction } = payload;
+  if (typeof key !== "string" || !POSTER_KEY.test(key)) {
+    return send(res, 400, { code: "23514", message: "Poster no valido" });
+  }
+  if (reaction !== null && reaction !== undefined && !REACTIONS.includes(reaction)) {
+    return send(res, 400, { code: "23514", message: "Reaccion no valida" });
+  }
+  if (!visitorId || ![...visitorIds.values()].includes(visitorId)) {
+    return send(res, 400, { code: "23514", message: "Visitante no valido" });
+  }
+  const byVisitor = reactionsByPoster.get(key) ?? new Map();
+  if (reaction == null) byVisitor.delete(visitorId);
+  else byVisitor.set(visitorId, reaction);
+  reactionsByPoster.set(key, byVisitor);
+  send(res, 200, countsFor(key));
+}
+
+function getPosterReactions(payload, res) {
+  const visitorId = payload.p_visitor_id ?? null;
+  const known = visitorId && [...visitorIds.values()].includes(visitorId);
+  const counts = {};
+  const mine = {};
+  for (const [key, byVisitor] of reactionsByPoster) {
+    if (byVisitor.size > 0) counts[key] = countsFor(key);
+    if (known && byVisitor.has(visitorId)) mine[key] = byVisitor.get(visitorId);
+  }
+  send(res, 200, { counts, mine });
 }
 
 const fake = createServer((req, res) => {
@@ -38,6 +79,19 @@ const fake = createServer((req, res) => {
       }
       if (!visitorIds.has(email)) visitorIds.set(email, randomUUID());
       send(res, 200, visitorIds.get(email));
+    });
+    return;
+  }
+
+  const rpc = req.method === "POST" ? req.url?.match(/^\/rest\/v1\/rpc\/(set_poster_reaction|get_poster_reactions)/) : null;
+  if (rpc) {
+    let raw = "";
+    req.on("data", (chunk) => (raw += chunk));
+    req.on("end", () => {
+      const payload = JSON.parse(raw || "{}");
+      calls.push({ rpc: rpc[1], ...payload });
+      if (rpc[1] === "set_poster_reaction") setPosterReaction(payload, res);
+      else getPosterReactions(payload, res);
     });
     return;
   }
