@@ -25,8 +25,8 @@ SHOTS = ROOT / "tests" / "screenshots"
 CATALOG = json.loads((ROOT / "src" / "data" / "catalog.json").read_text(encoding="utf-8"))
 AXIS = next(axis for axis in CATALOG["categories"] if axis["slug"] == "eje-4")
 POSTERS = AXIS["posters"]
-KEYS = ["love", "clap", "insight", "inspire"]
-LABELS = {"love": "Me encanta", "clap": "Aplausos", "insight": "Interesante", "inspire": "Inspirador"}
+KEYS = ["love", "clap"]
+LABELS = {"love": "Me encanta", "clap": "Aplausos"}
 
 failures: list[str] = []
 console_errors: list[str] = []
@@ -117,7 +117,10 @@ def settle_saved(page: Page) -> None:
 def run_card_checks(page: Page) -> None:
     check("axis has posters", len(POSTERS) >= 2)
     cards = page.locator(".poster-card:visible")
-    check("every card has 4 reaction buttons", cards.count() == len(POSTERS) and all(cards.nth(i).locator(".reaction").count() == 4 for i in range(cards.count())))
+    check("every card has exactly 2 reaction buttons plus the comments button", cards.count() == len(POSTERS) and all(
+        cards.nth(i).locator(".reaction").count() == 2 and cards.nth(i).locator("[data-comments-toggle]").count() == 1 for i in range(cards.count())
+    ))
+    check("no insight/inspire buttons are rendered", page.locator('[data-reaction="insight"], [data-reaction="inspire"]').count() == 0)
 
     card = card_at(page, 0)
     title = POSTERS[0]["title"]
@@ -163,8 +166,8 @@ def run_card_checks(page: Page) -> None:
     settle_saved(page)
 
     # Leave one reaction in place for the multi-visitor and viewer checks.
-    reaction(card, "insight").click()
-    check("insight saved", wait_count(card, "insight", base["insight"] + 1))
+    reaction(card, "love").click()
+    check("love saved", wait_count(card, "love", base["love"] + 1))
     settle_saved(page)
 
 
@@ -177,9 +180,9 @@ def run_second_visitor(browser: Browser, first_counts: dict[str, int]) -> None:
     card = card_at(page, 0)
     check("visitor B sees the shared totals", counts_of(card) == first_counts, f"{counts_of(card)} vs {first_counts}")
     check("visitor B has no selection of their own", not any(pressed(card, k) for k in KEYS))
-    reaction(card, "insight").click()
-    check("visitor B adds to the same total", wait_count(card, "insight", first_counts["insight"] + 1))
-    check("visitor B selection is independent", pressed(card, "insight"))
+    reaction(card, "love").click()
+    check("visitor B adds to the same total", wait_count(card, "love", first_counts["love"] + 1))
+    check("visitor B selection is independent", pressed(card, "love"))
     settle_saved(page)
     context.close()
 
@@ -195,7 +198,7 @@ def run_viewer_checks(page: Page) -> None:
     dialog = page.locator("dialog.viewer[open]")
     dialog.wait_for(timeout=30000)
     bar = dialog.locator(".reactions--viewer")
-    check("viewer shows the bar", bar.count() == 1 and bar.locator(".reaction").count() == 4)
+    check("viewer shows the bar", bar.count() == 1 and bar.locator(".reaction").count() == 2)
     check("viewer bar is labelled with the poster", dialog.get_by_role("group", name=f"Reacciones a {title}").count() == 1)
     check("viewer bar mirrors the card counts", counts_of(bar) == card_counts, f"{counts_of(bar)} vs {card_counts}")
     check("viewer bar mirrors the card selection", mine_key is not None and pressed(bar, mine_key))
@@ -203,7 +206,7 @@ def run_viewer_checks(page: Page) -> None:
     page.screenshot(path=str(SHOTS / "reactions-viewer.png"))
 
     # React from the viewer: the card behind it follows.
-    target = "inspire"
+    target = "clap"
     before = count_of(bar, target)
     reaction(bar, target).click()
     check("viewer: react updates its own count", wait_count(bar, target, before + 1))
@@ -231,6 +234,9 @@ def run_api_checks(context: BrowserContext, anonymous: BrowserContext) -> None:
     invalid = context.request.post(BASE_URL + "/api/reactions", data={"poster": key, "reaction": "dislike"})
     check("API: invalid reaction -> 400", invalid.status == 400, str(invalid.status))
     missing = context.request.post(BASE_URL + "/api/reactions", data={"poster": key})
+    for retired in ("insight", "inspire"):
+        gone = context.request.post(BASE_URL + "/api/reactions", data={"poster": key, "reaction": retired})
+        check(f"API: retired reaction {retired} -> 400", gone.status == 400, str(gone.status))
     check("API: missing reaction -> 400", missing.status == 400, str(missing.status))
     garbage = context.request.post(BASE_URL + "/api/reactions", data="not json", headers={"Content-Type": "application/json"})
     check("API: malformed body -> 400", garbage.status == 400, str(garbage.status))
@@ -272,14 +278,15 @@ def run_mobile_checks(browser: Browser) -> None:
     check("mobile: reaction buttons stay 44px+", all(b and b["height"] >= 44 and b["width"] >= 44 for b in boxes))
     card_box = card.bounding_box()
     check("mobile: bar stays inside the card", all(b and card_box and b["x"] >= card_box["x"] - 1 and b["x"] + b["width"] <= card_box["x"] + card_box["width"] + 1 for b in boxes))
+    base_love = count_of(card, "love")
     reaction(card, "love").click()
-    check("mobile: tap reacts", wait_count(card, "love", 1) and pressed(card, "love"))
+    check("mobile: tap reacts", wait_count(card, "love", base_love + 1) and pressed(card, "love"))
     settle_saved(page)
     card.scroll_into_view_if_needed()
     card.screenshot(path=str(SHOTS / "reactions-card-mobile.png"))
     page.screenshot(path=str(SHOTS / "reactions-axis-mobile.png"))
     reaction(card, "love").click()
-    wait_count(card, "love", 0)
+    wait_count(card, "love", base_love)
     settle_saved(page)
     context.close()
 
