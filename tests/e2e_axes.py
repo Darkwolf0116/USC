@@ -136,6 +136,14 @@ def check_home(page: Page) -> None:
     check("video title is verbatim", squash(video_title.inner_text()) == VIDEO_TITLE, squash(video_title.inner_text()))
     title_box = video_title.bounding_box()
     check("video title sits above the video", title_box is not None and frame is not None and title_box["y"] + title_box["height"] <= frame["y"], str(title_box))
+    # The h2 box spans the video width either way, so measure the rendered text itself.
+    text_center = page.evaluate(
+        """() => { const range = document.createRange();
+        range.selectNodeContents(document.getElementById('intro-video-title'));
+        const r = range.getBoundingClientRect(); return r.left + r.width / 2; }"""
+    )
+    frame_center = frame["x"] + frame["width"] / 2 if frame else 0
+    check("video title text is centered on the video", abs(text_center - frame_center) <= 2, f"{text_center} vs {frame_center}")
     lead_bottom = lead_box["y"] + lead_box["height"] if lead_box else 0
     check("video sits below the text", frame is not None and frame["y"] >= lead_bottom)
 

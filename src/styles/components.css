@@ -536,6 +536,8 @@
 .intro-video__title {
   max-inline-size: 60rem;
   margin-inline: auto;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .intro-video__frame {
