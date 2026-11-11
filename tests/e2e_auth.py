@@ -27,8 +27,9 @@ def check(name: str, condition: bool, detail: str = "") -> None:
 
 
 def fake_calls() -> list[dict]:
+    """`register_visit` payloads only: the fake tags reaction RPCs with an `rpc` key."""
     with urllib.request.urlopen(FAKE_SUPABASE + "/__calls") as response:
-        return json.loads(response.read())
+        return [call for call in json.loads(response.read()) if "rpc" not in call]
 
 
 def wait_visible(locator, timeout: int = 5000) -> bool:
