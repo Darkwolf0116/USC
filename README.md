@@ -119,6 +119,16 @@ NEXT_PUBLIC_SUPABASE_URL=https://phfnqngrohmanbffppxh.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave sb_publishable_ del proyecto>
 ```
 
+## Reacciones
+
+Cada tarjeta de póster y el visor de PDF muestran cuatro reacciones con su contador: ❤️ Me encanta, 👏 Aplausos, 💡 Interesante y ✨ Inspirador.
+
+- Cada persona tiene **una reacción por póster**: tocar otra la cambia y tocar la misma la quita. Se conserva al recargar y en otros dispositivos mientras se use la misma cookie de acceso.
+- Se guardan en Supabase (tabla `poster_reactions`); los totales por póster se ven y exportan a CSV desde la vista `poster_reaction_summary` (pasos en [`supabase/README.md`](supabase/README.md)).
+- `GET` y `POST /api/reactions` usan la cookie de acceso para identificar a la persona; el navegador nunca ve ese identificador ni toca las tablas.
+- Es coherente con el acceso "de confianza": como el correo no se verifica, quien registre varios correos `@usc.edu.co` podría reaccionar más de una vez.
+- Hay que ejecutar la migración `20261110000000_poster_reactions.sql` en Supabase; hasta entonces los botones quedan deshabilitados.
+
 ## Pruebas
 
 Todas las pruebas usan `scripts/dev-e2e.mjs`, que levanta el sitio contra un Supabase falso local (no toca el proyecto real). Las del catálogo y del asistente se registran primero con un correo de prueba.
@@ -132,6 +142,14 @@ python .agents/skills/webapp-testing/scripts/with_server.py --server "node scrip
 ```
 
 Verifica la portada (texto literal, video, cuatro botones), las cuatro páginas de eje, las migas, «Volver al inicio», eje anterior/siguiente, los enlaces antiguos, los títulos bajo cada vista previa, el acceso a cada PDF y miniatura, el visor (1 y 13 páginas), el menú Ejes, los enlaces directos, la búsqueda, el respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
+
+Para las reacciones (el Supabase falso las guarda en memoria; el script usa visitantes nuevos en cada corrida):
+
+```bash
+python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_reactions.py
+```
+
+Verifica las cuatro reacciones en cada tarjeta, reaccionar, cambiar y quitar, la persistencia al recargar, que un segundo visitante suma a los mismos totales con su propia selección, la barra del visor sincronizada con la tarjeta, que la API rechaza datos inválidos o sin cookie sin llegar a Supabase, y el ancho de 375 px.
 
 Para el asistente (en Chromium sin WebGPU valida el modo búsqueda, las intenciones y las acciones sobre las fuentes):
 

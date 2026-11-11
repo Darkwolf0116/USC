@@ -126,3 +126,11 @@ Floating virtual assistant (in-browser RAG, see README). It adds two floating la
 - `/eje/[slug]` (one page per axis, generated from the data): breadcrumbs "Inicio / Eje N" with the current item `aria-current="page"`, a "Volver al inicio" button, h1 with the axis number in `--color-health` and the name, the count and a hairline rule, then the poster grid. At the bottom: previous/next axis buttons (disabled at the ends), a row of all four axes with the current one marked, and a second "Volver al inicio". The header "Ejes" menu, drawer and footer link to `/eje/eje-N` and mark the current axis.
 - Card: preview button (hairline border, tinted `--color-paper-2` well, `aspect-ratio` from the data) -> h3 title clamped to 3 lines with the full text in `title` -> "N páginas" only when more than one -> actions pinned to the card bottom so rows align. Titles are cleaned file names (see `scripts/build-axes.mjs`), never raw names.
 - Thumbnails are static WebP served as-is (`unoptimized`): `/_next/image` bypasses the access gate's cookie check, so the optimizer is not used.
+
+## Reaction bar
+
+- `.reactions` (variants `card` and `viewer`): a `role="group"` named "Reacciones a <title>" with four toggle buttons (`aria-pressed`): Me encanta, Aplausos, Interesante, Inspirador. Each shows the emoji (`aria-hidden`) and its count (blank at zero, but the slot is always laid out so nothing shifts); the accessible name is "<Etiqueta>, N reacciones" and `title` repeats the label.
+- Emoji are used instead of SVG icons by explicit user request; the labels keep the meaning in text for assistive tech.
+- Buttons are at least 44px, flat, hairline `--color-rule` border on `--color-surface`. The visitor's own choice swaps to a `--color-health` border and a faint health tint (no shadow, no gold). Press feedback is a 120ms `transform: scale(0.92)`; under reduced motion there is no scale.
+- Card: sits between the title/pages and the action buttons, four equal buttons per row. Viewer: a light strip between the navy header and the toolbar, auto-width buttons. Both read the same state, so reacting in the viewer updates the card behind it.
+- Disabled (lower opacity) until the totals load; a polite live region announces "Reacción guardada", "Reacción quitada" or the error once for the whole site.
