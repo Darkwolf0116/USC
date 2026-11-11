@@ -6,13 +6,14 @@ public/rag/index.json, intent routing and the source actions. The local-AI path 
 Run with the dev server managed for you:
 
     python .agents/skills/webapp-testing/scripts/with_server.py \
-        --server "npm run dev" --port 3000 --timeout 180 -- python tests/e2e_assistant.py
+        --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_assistant.py
 
 Set BASE_URL to test another host (for example a production build on another port).
 """
 
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -22,8 +23,8 @@ BASE_URL = os.environ.get("BASE_URL", "http://localhost:3000")
 ROOT = Path(__file__).resolve().parent.parent
 SHOTS = ROOT / "tests" / "screenshots"
 CATALOG = json.loads((ROOT / "src" / "data" / "catalog.json").read_text(encoding="utf-8"))
-CATEGORIES = CATALOG["categories"]
-POSTERS = [poster for category in CATEGORIES for poster in category["posters"]]
+AXES = CATALOG["categories"]
+POSTERS = [poster for axis in AXES for poster in axis["posters"]]
 
 failures: list[str] = []
 console_errors: list[str] = []
@@ -56,7 +57,7 @@ def grant_access(page: Page) -> None:
 def open_home(page: Page) -> None:
     grant_access(page)
     page.goto(BASE_URL, wait_until="networkidle")
-    page.wait_for_selector("#categorias .tab")
+    page.wait_for_selector("#eje-1 article.poster-card")
 
 
 def launcher(page: Page):
@@ -99,14 +100,14 @@ def check_desktop(page: Page) -> None:
     page.screenshot(path=str(SHOTS / "assistant-desktop-empty.png"))
 
     # Suggestion -> retrieval in search mode with sources.
-    panel.get_by_role("button", name="¿Qué pósteres hay sobre la marcha?").click()
+    panel.get_by_role("button", name="¿Qué pósteres hay sobre caídas en adultos mayores?").click()
     sources = panel.locator(".assistant__msg--bot .assistant__source")
     sources.first.wait_for(timeout=20000)
     titles = [t.lower() for t in sources.locator(".assistant__source-title").all_inner_texts()]
-    marcha_titles = [p["title"].lower() for p in POSTERS if "marcha" in p["title"].lower()]
+    marcha_titles = [p["title"].lower() for p in POSTERS if "caídas" in p["title"].lower()]
     check("search reply lists sources", len(titles) >= 1, str(titles))
     check(
-        "sources include a marcha poster",
+        "sources include a falls poster",
         any(any(m in t for t in titles) for m in marcha_titles),
         str(titles),
     )
@@ -125,29 +126,45 @@ def check_desktop(page: Page) -> None:
     check("Esc closes the viewer", page.locator("dialog.viewer").count() == 0)
     check("panel still open after the viewer", panel.is_visible())
 
-    # Navigation intent: executes the action and confirms it.
-    ask(page, "Llévame a Práctica Infancia")
-    page.wait_for_function("location.search.includes('categoria=practica-infancia')")
-    check("intent selects the category in the URL", "categoria=practica-infancia" in page.url, page.url)
-    heading = page.locator("#panel-categoria h2").inner_text()
-    check("category panel heading matches", heading.strip() == "Práctica Infancia", heading)
-    last_reply = panel.locator(".assistant__msg--bot").last.inner_text()
-    check("assistant confirms the action", "Práctica Infancia" in last_reply, last_reply)
+    # Source action: "Ir al eje" scrolls to the axis of the source.
+    ir_eje = panel.get_by_role("button", name="Ir al eje").first
+    check("sources offer 'Ir al eje'", ir_eje.count() == 1)
+    ir_eje.click()
+    page.wait_for_function("/#eje-[1-4]$/.test(location.hash)")
+    check("'Ir al eje' updates the URL hash", re.search(r"#eje-[1-4]$", page.url) is not None, page.url)
 
-    # Other intents: category by name, poster by title, and catalog search.
-    ask(page, "Abre la categoría Administración y Gestión")
-    page.wait_for_function("location.search.includes('categoria=administracion-y-gestion-en-ft')")
-    check("category intent by name", True)
-    poster = next(p for p in POSTERS if "ergonom" in p["title"].lower())
+    # Navigation intent: executes the action and confirms it.
+    ask(page, "Llévame al Eje 3")
+    page.wait_for_function("location.hash === '#eje-3'")
+    page.wait_for_function("(() => { const t = document.querySelector('#eje-3').getBoundingClientRect().top; return t >= -2 && t <= 200; })()")
+    check("intent scrolls to the axis section", True)
+    last_reply = panel.locator(".assistant__msg--bot").last.inner_text()
+    axis3 = AXES[2]
+    check("assistant confirms the axis", f"Eje 3: {axis3['name']}" in last_reply, last_reply)
+
+    # Other intents: axis by name, poster by title, and catalog search.
+    ask(page, "ir al eje de actividad física")
+    page.wait_for_function("location.hash === '#eje-3'")
+    ask(page, f"Abre el eje {AXES[3]['name']}")
+    page.wait_for_function("location.hash === '#eje-4'")
+    check("axis intent by name", True)
+    poster = next(p for p in POSTERS if p["slug"] == "neurodetectives")
     ask(page, f"Abre el póster {poster['title']}")
     dialog = page.locator("dialog.viewer[open]")
     dialog.wait_for()
-    check("poster intent opens the viewer", poster["title"].lower() in dialog.locator(".viewer__title").inner_text().lower())
+    check("poster intent opens the right viewer", dialog.locator(".viewer__title").inner_text().strip().startswith(poster["title"]))
     page.keyboard.press("Escape")
     page.wait_for_selector("dialog.viewer", state="detached")
-    ask(page, "buscar ergonomía")
-    page.wait_for_function("document.querySelector('input[type=search]')?.value === 'ergonomia'")
+    ask(page, "buscar marcha")
+    page.wait_for_function("document.querySelector('input[type=search]')?.value === 'marcha'")
     check("search intent fills the catalog search", True)
+
+    # A content question about a topic present in the axes returns sources.
+    ask(page, "¿Qué trabajos tratan sobre el ACV?")
+    sources = panel.locator(".assistant__msg--bot").last.locator(".assistant__source")
+    sources.first.wait_for(timeout=20000)
+    acv = [t.lower() for t in sources.locator(".assistant__source-title").all_inner_texts()]
+    check("ACV question cites an ACV document", any("acv" in t for t in acv), str(acv))
 
     # A question without matches degrades to the not-found message.
     ask(page, "zzzxqwv")
@@ -194,7 +211,7 @@ def check_mobile(page: Page) -> None:
     )
     page.screenshot(path=str(SHOTS / "assistant-mobile-empty.png"))
 
-    panel.get_by_role("button", name="¿Qué pósteres hay sobre la marcha?").click()
+    panel.get_by_role("button", name="¿Qué pósteres hay sobre caídas en adultos mayores?").click()
     panel.locator(".assistant__source").first.wait_for(timeout=20000)
     check(
         "no horizontal overflow with sources",

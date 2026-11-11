@@ -40,7 +40,7 @@ def wait_visible(locator, timeout: int = 5000) -> bool:
 
 
 def check_redirects(request) -> None:
-    for path in ["/", "/posters/README.txt", "/rag/index.json", "/pdfjs/standard_fonts/FoxitSans.pfb"]:
+    for path in ["/", "/ejes/eje-4/neurodetectives.pdf", "/rag/index.json", "/pdfjs/standard_fonts/FoxitSans.pfb"]:
         response = request.get(BASE_URL + path, max_redirects=0)
         location = response.headers.get("location", "")
         check(f"{path} redirects to the access page", response.status in (307, 308) and "/acceso?next=" in location, f"{response.status} {location}")
@@ -126,11 +126,11 @@ def enter(page, next_param: str, expected_path: str) -> None:
 def check_entry_and_exit(page) -> None:
     enter(page, "https://evil.example/steal", "/")
     check("header greets the visitor", wait_visible(page.locator(".site-header__tools").get_by_text("Hola, Laura")))
-    check("catalog is visible after entering", wait_visible(page.locator("#categorias .tab").first))
+    check("catalog is visible after entering", wait_visible(page.locator("#eje-1").first))
     page.screenshot(path=str(SCREENSHOTS / "auth-entered-desktop.png"))
 
-    response = page.request.get(BASE_URL + "/posters/README.txt", max_redirects=0)
-    check("posters are reachable with access", response.status == 200, str(response.status))
+    response = page.request.get(BASE_URL + "/ejes/eje-4/neurodetectives.pdf", max_redirects=0)
+    check("axis PDFs are reachable with access", response.status == 200, str(response.status))
     response = page.request.get(BASE_URL + "/acceso", max_redirects=0)
     check("access page redirects home once inside", response.status in (307, 308), str(response.status))
 
@@ -144,7 +144,7 @@ def check_entry_and_exit(page) -> None:
     # Regression: browsers strip tab/newline, so "/%09/evil.com" used to become "//evil.com".
     for tricky in ["/%09/evil.example", "/%0A/evil.example", "/%5C%5Cevil.example"]:
         enter(page, tricky, "/")
-    enter(page, "%2Fposters%2FREADME.txt", "/posters/README.txt")
+    enter(page, "%2Fejes%2Feje-4%2Fneurodetectives.webp", "/ejes/eje-4/neurodetectives.webp")
 
 
 def main() -> int:
