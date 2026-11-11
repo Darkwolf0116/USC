@@ -121,13 +121,24 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave sb_publishable_ del proyecto>
 
 ## Reacciones
 
-Cada tarjeta de póster y el visor de PDF muestran cuatro reacciones con su contador: ❤️ Me encanta, 👏 Aplausos, 💡 Interesante y ✨ Inspirador.
+Cada tarjeta de póster y el visor de PDF muestran dos reacciones con su contador, ❤️ Me encanta y 👏 Aplausos, y a su lado el botón **💬 Comentarios (n)** (ver [Comentarios](#comentarios)). Las reacciones 💡 y ✨ ya no se ofrecen: la API las rechaza y las que ya estaban guardadas se conservan sin mostrarse.
 
 - Cada persona tiene **una reacción por póster**: tocar otra la cambia y tocar la misma la quita. Se conserva al recargar y en otros dispositivos mientras se use la misma cookie de acceso.
 - Se guardan en Supabase (tabla `poster_reactions`); los totales por póster se ven y exportan a CSV desde la vista `poster_reaction_summary` (pasos en [`supabase/README.md`](supabase/README.md)).
 - `GET` y `POST /api/reactions` usan la cookie de acceso para identificar a la persona; el navegador nunca ve ese identificador ni toca las tablas.
 - Es coherente con el acceso "de confianza": como el correo no se verifica, quien registre varios correos `@usc.edu.co` podría reaccionar más de una vez.
 - Hay que ejecutar la migración `20261110000000_poster_reactions.sql` en Supabase; hasta entonces los botones quedan deshabilitados.
+
+## Comentarios
+
+Cada póster tiene una sección de comentarios, visible solo al tocar el botón **💬 Comentarios (n)** junto al corazón y los aplausos (en la tarjeta y en el visor de PDF).
+
+- Cada comentario muestra el **nombre completo con el que la persona ingresó**, la fecha relativa ("hace 5 minutos", con la fecha completa al pasar el cursor) y el texto, que se muestra como texto plano y conserva los saltos de línea. Nunca se muestra el correo.
+- De 1 a 500 caracteres. Se publica con **Publicar** o con Ctrl/Cmd + Enter. Para evitar spam, cada persona puede comentar una vez cada 15 segundos (la API responde 429).
+- Se guardan en Supabase (tabla `poster_comments`). `GET /api/comments?poster=eje-N/<slug>` y `POST /api/comments` usan la cookie de acceso, igual que las reacciones.
+- No hay edición ni borrado por parte de quien comenta: el administrador modera desde Supabase y puede exportar todo con la vista `poster_comment_export` (pasos en [`supabase/README.md`](supabase/README.md)).
+- Como el acceso es "de confianza", el nombre mostrado es el que la persona escribió al ingresar: alguien podría ingresar con un nombre ajeno.
+- Hay que ejecutar la migración `20261112000000_poster_comments.sql` en Supabase; hasta entonces el botón muestra 0 y publicar falla con un aviso.
 
 ## Pruebas
 
@@ -149,7 +160,15 @@ Para las reacciones (el Supabase falso las guarda en memoria; el script usa visi
 python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_reactions.py
 ```
 
-Verifica las cuatro reacciones en cada tarjeta, reaccionar, cambiar y quitar, la persistencia al recargar, que un segundo visitante suma a los mismos totales con su propia selección, la barra del visor sincronizada con la tarjeta, que la API rechaza datos inválidos o sin cookie sin llegar a Supabase, y el ancho de 375 px.
+Verifica que cada tarjeta tiene exactamente dos reacciones (y la API rechaza `insight`/`inspire`), reaccionar, cambiar y quitar, la persistencia al recargar, que un segundo visitante suma a los mismos totales con su propia selección, la barra del visor sincronizada con la tarjeta, que la API rechaza datos inválidos o sin cookie sin llegar a Supabase, y el ancho de 375 px.
+
+Para los comentarios (el Supabase falso aplica las mismas reglas que el SQL, incluida la espera de 15 s; el script borra sus visitantes al terminar):
+
+```bash
+python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_comments.py
+```
+
+Verifica que el panel está oculto hasta tocar el botón (`aria-expanded`), el mensaje de panel vacío, publicar con el nombre completo de quien ingresó, el contador, la persistencia al recargar, que otro visitante ve el comentario, que `<script>` se muestra literal, el rechazo de texto vacío o de más de 500 caracteres, el antispam (429), la sincronía entre tarjeta y visor, el aviso de reingreso con una cookie vieja y el ancho de 375 px.
 
 Para el asistente (en Chromium sin WebGPU valida el modo búsqueda, las intenciones y las acciones sobre las fuentes):
 

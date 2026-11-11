@@ -129,8 +129,16 @@ Floating virtual assistant (in-browser RAG, see README). It adds two floating la
 
 ## Reaction bar
 
-- `.reactions` (variants `card` and `viewer`): a `role="group"` named "Reacciones a <title>" with four toggle buttons (`aria-pressed`): Me encanta, Aplausos, Interesante, Inspirador. Each shows the emoji (`aria-hidden`) and its count (blank at zero, but the slot is always laid out so nothing shifts); the accessible name is "<Etiqueta>, N reacciones" and `title` repeats the label.
+- `.reactions` (variants `card` and `viewer`): a `role="group"` named "Reacciones a <title>" with two toggle buttons (`aria-pressed`): Me encanta and Aplausos. Each shows the emoji (`aria-hidden`) and its count (blank at zero, but the slot is always laid out so nothing shifts); the accessible name is "<Etiqueta>, N reacciones" and `title` repeats the label.
 - Emoji are used instead of SVG icons by explicit user request; the labels keep the meaning in text for assistive tech.
 - Buttons are at least 44px, flat, hairline `--color-rule` border on `--color-surface`. The visitor's own choice swaps to a `--color-health` border and a faint health tint (no shadow, no gold). Press feedback is a 120ms `transform: scale(0.92)`; under reduced motion there is no scale.
-- Card: sits between the title/pages and the action buttons, four equal buttons per row. Viewer: a light strip between the navy header and the toolbar, auto-width buttons. Both read the same state, so reacting in the viewer updates the card behind it.
+- Card: sits between the title/pages and the action buttons, in one row with the comments toggle. Viewer: a light strip between the navy header and the toolbar, auto-width buttons. Both read the same state, so reacting in the viewer updates the card behind it.
 - Disabled (lower opacity) until the totals load; a polite live region announces "Reacción guardada", "Reacción quitada" or the error once for the whole site.
+
+## Comments panel
+
+- `.comments-toggle` sits in the same row as the two reactions (card and viewer): "💬 Comentarios (n)", same 44px, flat, hairline-border button as `.reaction`, with `aria-expanded` and `aria-controls` pointing at the panel; the open state uses the same health border and tint as a pressed reaction. Its accessible name is "Comentarios, N". In cards narrower than 16rem the word is dropped (container query) so the toggle never wraps to a second row.
+- `.comments` is hidden by default (`hidden`) and opens under the row with a 220ms opacity/translate animation (none under reduced motion). Flat `--color-paper` panel with a hairline border, no shadow. It loads its list the first time it opens and refreshes on each reopen.
+- Inside: the list (`.comments__list`, newest first, capped at 14rem, or `min(16rem, 28dvh)` in the viewer, scrolling internally so a long thread never stretches the card grid), then the form. Each `.comment` is a white hairline box with the author's full name (bold), the relative date (`<time>`, full date in `title`) and the text. Text is rendered as plain text with `white-space: pre-wrap` and `overflow-wrap: anywhere`, never as HTML. The e-mail is never shown.
+- Form: visible label "Escribe un comentario", textarea with the instant focus ring, an `n/500` counter (turns `--color-error` over the limit) and a primary "Publicar" button, disabled when empty, over 500 characters, sending, or before the list has loaded. Ctrl/Cmd+Enter also submits. Errors (including the 15 s wait) appear in `role="alert"` under the form and keep the draft; a successful post clears the field, inserts at the top and is announced by the shared live region.
+- Empty state: "Sé el primero en comentar". An expired session reuses the reactions notice ("Tu sesión expiró" + "Ingresar de nuevo").
