@@ -284,6 +284,137 @@ def run_mobile_checks(browser: Browser) -> None:
     context.close()
 
 
+def forget_visitor(context: BrowserContext, email: str) -> None:
+    """Deletes the visitor in the fake Supabase, so the browser keeps a cookie for a row that no longer exists."""
+    response = context.request.post(FAKE_URL + "/__forget-visitor", data={"email": email})
+    if not response.ok:
+        raise RuntimeError(f"Could not forget the visitor: {response.status}")
+
+
+def run_stale_api_checks(browser: Browser) -> None:
+    key = f"{AXIS['slug']}/{POSTERS[0]['slug']}"
+    stamp = int(time.time())
+
+    context = browser.new_context()
+    email = f"api.viejo.{stamp}@usc.edu.co"
+    grant_access(context, email)
+    forget_visitor(context, email)
+    post = context.request.post(BASE_URL + "/api/reactions", data={"poster": key, "reaction": "love"})
+    body = post.json()
+    cleared = " ".join(h["value"] for h in post.headers_array if h["name"].lower() == "set-cookie")
+    check("stale API: POST -> 401 visitor_not_found", post.status == 401 and body.get("code") == "visitor_not_found", f"{post.status} {body}")
+    check("stale API: both cookies are cleared", "usc_access=;" in cleared and "usc_visitor_name=;" in cleared, cleared)
+    check("stale API: the cookie jar no longer has the visitor", not any(c["name"] == "usc_access" for c in context.cookies()))
+    context.close()
+
+    context = browser.new_context()
+    email = f"api.viejo.get.{stamp}@usc.edu.co"
+    grant_access(context, email)
+    forget_visitor(context, email)
+    get = context.request.get(BASE_URL + "/api/reactions")
+    check("stale API: GET -> 401 visitor_not_found", get.status == 401 and get.json().get("code") == "visitor_not_found", str(get.status))
+    check("stale API: GET clears the cookie", not any(c["name"] == "usc_access" for c in context.cookies()))
+    context.close()
+
+    # A valid visitor with no reactions is not mistaken for a stale one.
+    context = browser.new_context()
+    grant_access(context, f"api.vigente.{stamp}@usc.edu.co")
+    fresh = context.request.get(BASE_URL + "/api/reactions")
+    check("stale API: a known visitor still gets 200", fresh.status == 200 and fresh.json().get("ok") is True, str(fresh.status))
+    check("stale API: a known visitor keeps the cookie", any(c["name"] == "usc_access" for c in context.cookies()))
+    context.close()
+
+
+def run_stale_visitor_flow(browser: Browser) -> None:
+    context = browser.new_context(viewport={"width": 1280, "height": 900})
+    page = context.new_page()
+    page.set_default_timeout(30000)
+    errors_before = len(console_errors)
+    watch_console(page)
+    email = f"viejo.{int(time.time())}@usc.edu.co"
+    grant_access(context, email)
+    open_axis(page)
+    card = card_at(page, 0)
+    base_love = count_of(card, "love")
+    reaction(card, "love").click()
+    check("stale flow: reaction works before the visitor disappears", wait_count(card, "love", base_love + 1))
+    settle_saved(page)
+
+    forget_visitor(context, email)
+    page.reload(wait_until="domcontentloaded", timeout=120000)
+    notice = page.locator(".reactions-notice--expired:visible")
+    try:
+        notice.first.wait_for(state="visible", timeout=30000)
+    except PlaywrightTimeoutError:
+        pass
+    check("stale flow: a visible notice appears on load", notice.count() == 1 and "Tu sesión expiró" in notice.first.inner_text(), str(notice.count()))
+    check("stale flow: the cookies were cleared", not any(c["name"] in ("usc_access", "usc_visitor_name") for c in context.cookies()))
+    check("stale flow: the buttons are disabled", reaction(card_at(page, 0), "love").is_disabled())
+    page.wait_for_timeout(600)  # let the entrance animation finish
+    page.screenshot(path=str(SHOTS / "reactions-stale.png"))
+
+    link = notice.first.get_by_role("link", name="Ingresar de nuevo")
+    href = link.get_attribute("href") or ""
+    check("stale flow: the link returns to this page after signing in", href == f"/acceso?next=%2Feje%2F{AXIS['slug']}", href)
+    box = link.bounding_box()
+    check("stale flow: the link is a 44px+ target", box is not None and box["height"] >= 44, str(box))
+    link.click()
+    page.wait_for_url("**/acceso**", timeout=60000)
+    check("stale flow: the link opens the access page", "/acceso" in page.url and "next=" in page.url, page.url)
+
+    # Sign in again (registers the visitor anew) and react: it now sticks.
+    grant_access(context, email)
+    open_axis(page)
+    card = card_at(page, 0)
+    check("stale flow: no notice after signing in again", page.locator(".reactions-notice:visible").count() == 0)
+    base = count_of(card, "clap")
+    reaction(card, "clap").click()
+    check("stale flow: reaction works after signing in again", wait_count(card, "clap", base + 1) and pressed(card, "clap"))
+    settle_saved(page)
+    page.reload(wait_until="domcontentloaded", timeout=120000)
+    page.wait_for_selector(".poster-card:visible", timeout=60000)
+    wait_ready(page)
+    card = card_at(page, 0)
+    check("stale flow: the reaction persisted after a reload", pressed(card, "clap") and count_of(card, "clap") == base + 1)
+    reaction(card, "clap").click()
+    wait_count(card, "clap", base)
+    settle_saved(page)
+    del console_errors[errors_before:]  # the expected 401 is logged by the browser as a console error
+    context.close()
+
+
+def run_failed_save_notice(browser: Browser) -> None:
+    context = browser.new_context(viewport={"width": 1280, "height": 900})
+    page = context.new_page()
+    page.set_default_timeout(30000)
+    grant_access(context, f"falla.guardar.{int(time.time())}@usc.edu.co")
+    open_axis(page)
+    page.route(
+        "**/api/reactions",
+        lambda route: route.fulfill(status=502, content_type="application/json", body=json.dumps({"ok": False, "message": "No pudimos guardar tu reacción."}))
+        if route.request.method == "POST"
+        else route.continue_(),
+    )
+    card = card_at(page, 0)
+    base = count_of(card, "love")
+    reaction(card, "love").click()
+    notice = card.locator(".reactions-notice--error")
+    try:
+        notice.wait_for(state="visible", timeout=10000)
+    except PlaywrightTimeoutError:
+        pass
+    check("failed save: a visible message appears under the card", notice.count() == 1 and "No pudimos guardar" in notice.inner_text())
+    check("failed save: the optimistic change was reverted", wait_count(card, "love", base) and not pressed(card, "love"))
+    check("failed save: other cards show no message", page.locator(".reactions-notice:visible").count() == 1)
+    try:
+        notice.wait_for(state="detached", timeout=12000)
+        gone = True
+    except PlaywrightTimeoutError:
+        gone = False
+    check("failed save: the message goes away by itself", gone)
+    context.close()
+
+
 def main() -> int:
     SHOTS.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as playwright:
@@ -310,6 +441,9 @@ def main() -> int:
         anonymous.close()
 
         run_mobile_checks(browser)
+        run_stale_api_checks(browser)
+        run_stale_visitor_flow(browser)
+        run_failed_save_notice(browser)
 
         check("no console errors", not console_errors, "; ".join(console_errors[:5]))
         browser.close()
