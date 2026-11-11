@@ -2,7 +2,9 @@
 
 import { createContext, use, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { ReactionsNotice } from "./ReactionsNotice";
+import type { CommentsGetResponse, CommentsPostResponse } from "@/app/api/comments/route";
 import type { ReactionsGetResponse, ReactionsPostResponse } from "@/app/api/reactions/route";
+import type { PosterComment } from "@/lib/comments";
 import { emptyCounts, type ReactionCounts, type ReactionKey } from "@/lib/reactions";
 
 export type ReactionsStatus = "loading" | "ready" | "error";
@@ -14,9 +16,30 @@ export interface ReactionsState {
   mine: Record<string, ReactionKey>;
 }
 
+export type CommentsStatus = "idle" | "loading" | "ready" | "error";
+
+/** Comments of one poster, loaded the first time its panel is opened. */
+export interface CommentsEntry {
+  status: CommentsStatus;
+  /** Newest first. */
+  items: PosterComment[];
+}
+
+export type AddCommentResult = { ok: true } | { ok: false; message: string };
+
+export interface CommentsState {
+  /** Number of comments per poster key; posters without comments are absent. */
+  counts: Record<string, number>;
+  lists: Record<string, CommentsEntry>;
+}
+
 export interface ReactionsActions {
   /** Picks `reaction` for the poster; picking the current one removes it, another one switches. */
   react: (posterKey: string, reaction: ReactionKey) => Promise<void>;
+  /** Loads (or refreshes) the comments of a poster; the list in `state.comments` updates when it arrives. */
+  loadComments: (posterKey: string) => Promise<void>;
+  /** Publishes a comment; on success it is inserted at the top of the poster's list. */
+  addComment: (posterKey: string, body: string) => Promise<AddCommentResult>;
 }
 
 /** A visible message about a failed load or save. */
@@ -37,6 +60,7 @@ export interface ReactionsMeta {
 
 export interface ReactionsContextValue {
   state: ReactionsState;
+  comments: CommentsState;
   actions: ReactionsActions;
   meta: ReactionsMeta;
 }
@@ -67,7 +91,13 @@ export function ReactionsProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<ReactionsStatus>("loading");
   const [announcement, setAnnouncement] = useState("");
   const [notice, setNotice] = useState<ReactionsNotice | null>(null);
+  const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+  const [commentLists, setCommentLists] = useState<Record<string, CommentsEntry>>({});
   const stateRef = useRef(state);
+  /** Bumped by every published comment, so a list fetched before it cannot overwrite it. */
+  const commentVersionRef = useRef(new Map<string, number>());
+  const loadingCommentsRef = useRef(new Set<string>());
+  const postingCommentRef = useRef(false);
   const pendingRef = useRef(new Set<string>());
 
   useEffect(() => {
@@ -102,6 +132,7 @@ export function ReactionsProvider({ children }: { children: ReactNode }) {
         }
         if (!response.ok || !body.ok) throw new Error("load failed");
         setState({ counts: body.counts ?? {}, mine: body.mine ?? {} });
+        setCommentCounts(body.comments ?? {});
         setStatus("ready");
       } catch {
         if (controller.signal.aborted) return;
@@ -181,13 +212,98 @@ export function ReactionsProvider({ children }: { children: ReactNode }) {
     [expire],
   );
 
+  const loadComments = useCallback(
+    async (posterKey: string) => {
+      if (loadingCommentsRef.current.has(posterKey)) return;
+      loadingCommentsRef.current.add(posterKey);
+      const version = commentVersionRef.current.get(posterKey) ?? 0;
+      // Keep showing what we have while refreshing; only the first load shows a loading state.
+      setCommentLists((current) => {
+        const entry = current[posterKey];
+        if (entry && entry.status === "ready") return current;
+        return { ...current, [posterKey]: { status: "loading", items: entry?.items ?? [] } };
+      });
+      try {
+        const response = await fetch(`/api/comments?poster=${encodeURIComponent(posterKey)}`, {
+          cache: "no-store",
+        });
+        const body = (await response.json()) as CommentsGetResponse;
+        if (body.code === "visitor_not_found") {
+          setCommentLists((current) => ({ ...current, [posterKey]: { status: "idle", items: [] } }));
+          expire(body.message ?? "Tu sesión expiró. Vuelve a ingresar para comentar.");
+          return;
+        }
+        if (!response.ok || !body.ok || !body.comments) throw new Error("load failed");
+        const items = body.comments;
+        if ((commentVersionRef.current.get(posterKey) ?? 0) === version) {
+          setCommentLists((current) => ({ ...current, [posterKey]: { status: "ready", items } }));
+          // The list is capped at 200; below the cap its length is the exact total.
+          if (items.length < 200) setCommentCounts((current) => ({ ...current, [posterKey]: items.length }));
+        }
+      } catch {
+        setCommentLists((current) => {
+          const entry = current[posterKey];
+          // A refresh that fails keeps the list already shown.
+          if (entry?.status === "ready") return current;
+          return { ...current, [posterKey]: { status: "error", items: entry?.items ?? [] } };
+        });
+      } finally {
+        loadingCommentsRef.current.delete(posterKey);
+      }
+    },
+    [expire],
+  );
+
+  const addComment = useCallback(
+    async (posterKey: string, text: string): Promise<AddCommentResult> => {
+      if (postingCommentRef.current) return { ok: false, message: "Tu comentario ya se está publicando." };
+      postingCommentRef.current = true;
+      try {
+        const response = await fetch("/api/comments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ poster: posterKey, body: text }),
+        });
+        const body = (await response.json()) as CommentsPostResponse;
+        if (body.code === "visitor_not_found") {
+          const message = body.message ?? "Tu sesión expiró. Vuelve a ingresar para comentar.";
+          expire(message);
+          return { ok: false, message };
+        }
+        if (!response.ok || !body.ok || !body.comment) {
+          return { ok: false, message: body.message ?? "No pudimos publicar tu comentario. Inténtalo de nuevo." };
+        }
+        const comment = body.comment;
+        commentVersionRef.current.set(posterKey, (commentVersionRef.current.get(posterKey) ?? 0) + 1);
+        setCommentLists((current) => ({
+          ...current,
+          [posterKey]: { status: "ready", items: [comment, ...(current[posterKey]?.items ?? [])] },
+        }));
+        setCommentCounts((current) => ({ ...current, [posterKey]: (current[posterKey] ?? 0) + 1 }));
+        setAnnouncement("Comentario publicado.");
+        return { ok: true };
+      } catch {
+        return { ok: false, message: "No pudimos publicar tu comentario. Inténtalo de nuevo." };
+      } finally {
+        postingCommentRef.current = false;
+      }
+    },
+    [expire],
+  );
+
+  const comments = useMemo<CommentsState>(
+    () => ({ counts: commentCounts, lists: commentLists }),
+    [commentCounts, commentLists],
+  );
+
   const value = useMemo<ReactionsContextValue>(
     () => ({
       state,
-      actions: { react },
+      comments,
+      actions: { react, loadComments, addComment },
       meta: { status, notice, announcement },
     }),
-    [state, react, status, notice, announcement],
+    [state, comments, react, loadComments, addComment, status, notice, announcement],
   );
 
   return (

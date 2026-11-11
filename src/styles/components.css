@@ -848,16 +848,24 @@
   flex: 1 1 auto;
 }
 
-/* Reaction bar: four toggle buttons with their totals. Flat, hairline border; the visitor's
+/* Reaction bar: two toggle buttons with their totals plus the comments toggle, in one row. Flat, hairline border; the visitor's
    own choice gets the health-blue border and a faint tint. Counts are always laid out
    (blank at zero) so the buttons do not change size when the first reaction arrives. */
 .reactions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2xs);
+  container-type: inline-size;
 }
 
-.reaction {
+.reactions__group {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--space-2xs);
+}
+
+.reaction,
+.comments-toggle {
   display: inline-flex;
   flex: 1 1 0;
   align-items: center;
@@ -881,6 +889,27 @@
     transform var(--dur-micro) var(--ease-out);
 }
 
+.comments-toggle {
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.comments-toggle[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--color-health) 10%, var(--color-surface));
+  border-color: var(--color-health);
+}
+
+.comments-toggle__count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Narrow cards: keep the toggle in the same row as the reactions by dropping the word. */
+@container (max-width: 16rem) {
+  .comments-toggle__label {
+    display: none;
+  }
+}
+
 .reaction__emoji {
   font-size: 1.125rem;
   line-height: 1;
@@ -896,7 +925,8 @@
   border-color: var(--color-health);
 }
 
-.reaction:active:not(:disabled) {
+.reaction:active:not(:disabled),
+.comments-toggle:active {
   transform: scale(0.92);
 }
 
@@ -906,6 +936,7 @@
 }
 
 @media (hover: hover) {
+  .comments-toggle:hover:not([aria-expanded="true"]),
   .reaction:hover:not(:disabled):not([aria-pressed="true"]) {
     background: var(--color-paper-2);
     border-color: var(--color-field-edge);
@@ -913,9 +944,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reaction:active:not(:disabled) {
+  .reaction:active:not(:disabled),
+  .comments-toggle:active {
     transform: none;
   }
+}
+
+.reactions--card .reaction,
+.reactions--card .comments-toggle {
+  padding-inline: 6px;
 }
 
 .reactions--viewer {
@@ -925,9 +962,171 @@
   border-block-end: var(--rule-hair) solid var(--color-rule);
 }
 
-.reactions--viewer .reaction {
+.reactions--viewer .reaction,
+.reactions--viewer .comments-toggle {
   flex: 0 0 auto;
   padding-inline: var(--space-sm);
+}
+
+.reactions--viewer {
+  gap: var(--space-xs);
+}
+
+/* Comments panel: opens under the bar. Flat, hairline border; the list scrolls inside a
+   capped height so a long thread never stretches the card grid. */
+.comments {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  background: var(--color-paper);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-control);
+  font-size: var(--text-sm);
+  animation: comments-in var(--dur-short) var(--ease-out);
+}
+
+.comments[hidden] {
+  display: none;
+}
+
+@keyframes comments-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comments {
+    animation: none;
+  }
+}
+
+.comments--viewer {
+  margin: var(--space-xs) var(--space-md);
+}
+
+.comments__state {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.comments__state--error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-sm);
+  color: var(--color-error);
+}
+
+.comments__state--error p {
+  margin: 0;
+}
+
+.comments__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-block-size: 14rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.comments--viewer .comments__list {
+  max-block-size: min(16rem, 28dvh);
+}
+
+.comment {
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-control);
+}
+
+.comment__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-xs);
+  margin: 0;
+}
+
+.comment__author {
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+
+.comment__date {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+}
+
+.comment__body {
+  margin: var(--space-3xs) 0 0;
+  color: var(--color-ink-2);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comments__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.comments__label {
+  font-weight: 600;
+}
+
+.comments__field {
+  inline-size: 100%;
+  min-block-size: 4.5rem;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-field-edge);
+  border-radius: var(--radius-control);
+  font: inherit;
+  line-height: 1.45;
+  resize: vertical;
+  outline: 2px solid transparent;
+  outline-offset: -3px;
+}
+
+.comments__field:focus-visible {
+  outline-color: var(--ring, var(--color-focus));
+}
+
+.comments__field[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.comments__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+}
+
+.comments__counter {
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.comments__counter--over {
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.comments__error {
+  margin: 0;
+  color: var(--color-error);
 }
 
 /* Reaction notices: a failed save or an expired session. Flat, hairline border, error-colored
