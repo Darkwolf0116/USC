@@ -1,8 +1,6 @@
 # Repositorio de Proyectos de Aula - Fisioterapia USC
 
-Sitio de una sola página para la muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali. Reúne pósteres de proyectos de aula en 10 categorías, con búsqueda en vivo, visor de PDF dentro de la página y descarga directa.
-
-> **Mockup académico.** Los nombres de estudiantes y docentes, los títulos y los pósteres en PDF son ilustrativos. No corresponden a personas ni trabajos reales.
+Sitio de una sola página para la muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali. Reúne los documentos de investigación en PDF de los cuatro ejes del programa, con búsqueda en vivo, visor de PDF dentro de la página y descarga directa.
 
 Construido con Next.js 16 (App Router), React 19, Tailwind CSS v4, `react-pdf` y `lucide-react`.
 
@@ -18,11 +16,11 @@ npm install
 npm run dev        # http://localhost:3000
 npm run build      # compilación de producción (regenera antes el índice del asistente)
 npm run lint
-npm run posters    # regenera los PDF de ejemplo en public/posters
+npm run axes       # importa los PDF de Ejes/ a public/ejes y regenera src/data/catalog.json
 npm run rag:index  # regenera el índice del asistente virtual (public/rag)
 ```
 
-El enlace `?categoria=<slug>` abre una categoría concreta, por ejemplo `/?categoria=practica-infancia#categorias`.
+Cada eje tiene su ancla (`#eje-1` a `#eje-4`). Los enlaces `/#eje-3` y `/?categoria=eje-3` abren la página desplazada a ese eje.
 
 ## Estructura
 
@@ -30,7 +28,7 @@ El enlace `?categoria=<slug>` abre una categoría concreta, por ejemplo `/?categ
 src/
   app/                  layout, página y estilos globales
   components/
-    catalog/            proveedor de estado, pestañas, tarjetas, búsqueda
+    catalog/            proveedor de estado, secciones por eje, tarjetas, búsqueda
     layout/             encabezado, hero, pie de página, logotipo
     pdf-viewer/         visor compuesto (Root, Header, Toolbar, Document) y diálogo
   data/                 catalog.json (datos), catalog.ts y types.ts
@@ -41,34 +39,36 @@ src/
   styles/               tokens, base y componentes
 public/
   Info/logo.png         logotipo institucional (en minúsculas, Vercel distingue mayúsculas)
-  posters/              PDF de cada póster
+  ejes/eje-N/           PDF de cada eje y su miniatura WebP (generados con npm run axes)
   rag/                  índice del asistente (index.json + vectors.bin), generado
   pdfjs/standard_fonts  fuentes que PDF.js necesita para los PDF de ejemplo
-scripts/                generador de pósteres, copia de recursos de PDF.js e indexador del asistente
-tests/                  pruebas end-to-end con Playwright (catálogo y asistente)
+scripts/                importador de ejes (build-axes), copia de recursos de PDF.js e indexador del asistente
+tests/                  pruebas end-to-end con Playwright (ejes, asistente y acceso)
 DESIGN.md               sistema de diseño
 ```
 
-## Reemplazar los PDF de ejemplo por pósteres reales
+## Agregar documentos a los ejes
 
-1. Copie el PDF real en `public/posters/`, por ejemplo `public/posters/mi-poster.pdf`.
-2. Edite `src/data/catalog.json`: dentro de la categoría correspondiente cambie o agregue el póster y apunte `pdf` al archivo (`"/posters/mi-poster.pdf"`). Campos: `slug`, `title`, `students`, `advisor`, `semester`, `summary`, `pdf` y `thumbnail` (opcional).
-3. Opcional: agregue una imagen en `public/` y use su ruta en `thumbnail` (por ejemplo `"/posters/mi-poster.png"`). Si no hay miniatura, el sitio dibuja una maqueta en CSS.
-4. No ejecute `npm run posters` después de reemplazar archivos con el mismo nombre: el script sobrescribe `public/posters/<slug>.pdf` con la maqueta.
-5. Suba los cambios (`git push`). Vercel ejecuta `prebuild` y el asistente aprende los PDF nuevos sin más pasos. En local use `npm run rag:index` y confirme los archivos de `public/rag/`.
+1. Copie el PDF en la carpeta del eje dentro de `Ejes/` (por ejemplo `Ejes/Eje 3 - Actividad Física, Ejercicio y Salud/mi-documento.pdf`). `Ejes/` es la fuente local y está ignorada por git.
+2. Ejecute `npm run axes`. El script copia los PDF a `public/ejes/eje-N/`, genera la miniatura WebP de la primera página, cuenta las páginas y escribe `src/data/catalog.json`. El título sale del nombre del archivo, sin numeración inicial, guiones bajos, espacios repetidos ni `.pdf`.
+3. Revise los títulos en la tabla que imprime el script. Para corregir uno (por ejemplo un nombre truncado por Windows o sin tildes) agregue su entrada en `src/data/title-overrides.json` y vuelva a ejecutar `npm run axes`.
+4. Ejecute `npm run rag:index` para que el asistente aprenda los documentos nuevos.
+5. Confirme (`git add`) `public/ejes`, `src/data/catalog.json`, `src/data/title-overrides.json` y `public/rag`, y suba los cambios. Vercel ejecuta `prebuild` y publica.
+
+Los PDF compuestos solo por imágenes (por ejemplo pósteres exportados como imagen) no tienen texto extraíble: no se aplica OCR, así que el asistente solo conoce su título y su eje. Los PDF con texto se indexan completos, por página.
 
 Para cambiar el logotipo, reemplace `public/Info/logo.png` conservando el nombre.
 
 ## Asistente virtual (IA local)
 
-Un botón flotante abre un asistente que responde preguntas sobre los pósteres, cita sus fuentes ([1], [2]…), lleva al visitante a una categoría y abre PDF. **No usa ningún servidor de IA ni clave de API**: el modelo de lenguaje se ejecuta en el navegador de cada visitante, por lo que no genera costo por consulta.
+Un botón flotante abre un asistente que responde preguntas sobre los documentos, cita sus fuentes ([1], [2]…), lleva al visitante a un eje y abre PDF. **No usa ningún servidor de IA ni clave de API**: el modelo de lenguaje se ejecuta en el navegador de cada visitante, por lo que no genera costo por consulta.
 
 ### Cómo funciona
 
 ```
 Build (Vercel o local)                      Navegador del visitante
 ----------------------                      -----------------------
-public/posters/*.pdf  ─┐                    pregunta ─> router de intenciones ─> acción (ir / abrir / buscar)
+public/ejes/*/*.pdf  ─┐                     pregunta ─> router de intenciones ─> acción (ir / abrir / buscar)
 src/data/catalog.json ─┼─ rag:index ─┐          │ (no es un comando)
 páginas de ayuda      ─┘  (prebuild)  │          v
                                       v      BM25 (MiniSearch) + vectores (e5-small, WASM, Web Worker)
@@ -79,7 +79,7 @@ páginas de ayuda      ─┘  (prebuild)  │          v
                           respuesta en streaming + [n]    v      con términos marcados
 ```
 
-- `scripts/build-rag-index.mjs` extrae el texto de cada PDF por página (PDF.js), añade una ficha por póster y por categoría y textos de ayuda del sitio, los divide en fragmentos de unos 650 caracteres y calcula embeddings con `Xenova/multilingual-e5-small`. Si nada cambió (hash del catálogo, los PDF y la versión del script) no hace nada; `npm run rag:index -- --force` fuerza la regeneración. El modelo se guarda en caché en `.cache/` (ignorada por git).
+- `scripts/build-rag-index.mjs` extrae el texto de cada PDF por página (PDF.js), añade una ficha por documento y por eje y textos de ayuda del sitio, los divide en fragmentos de unos 650 caracteres y calcula embeddings con `Xenova/multilingual-e5-small`. Si nada cambió (hash del catálogo, los PDF y la versión del script) no hace nada; `npm run rag:index -- --force` fuerza la regeneración. El modelo se guarda en caché en `.cache/` (ignorada por git).
 - El asistente solo carga el índice (~200 KB) al abrirse. Los modelos pesados se cargan **bajo demanda**, en Web Workers, y no forman parte del JavaScript inicial de la página.
 
 ### Requisitos y primera descarga
@@ -121,10 +121,10 @@ python .agents/skills/webapp-testing/scripts/with_server.py --server "node scrip
 ```
 
 ```bash
-python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_catalog.py
+python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_axes.py
 ```
 
-Verifica pestañas, URL, búsqueda, visor de PDF, descargas, respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
+Verifica las cuatro secciones, los títulos bajo cada vista previa, el acceso a cada PDF y miniatura, el visor (1 y 13 páginas), el menú Ejes, los enlaces directos, la búsqueda, el respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
 
 Para el asistente (en Chromium sin WebGPU valida el modo búsqueda, las intenciones y las acciones sobre las fuentes):
 
