@@ -57,7 +57,7 @@ def grant_access(page: Page) -> None:
 def open_home(page: Page) -> None:
     grant_access(page)
     page.goto(BASE_URL, wait_until="networkidle")
-    page.wait_for_selector("#eje-1 article.poster-card")
+    page.wait_for_selector(".axis-button")
 
 
 def launcher(page: Page):
@@ -126,27 +126,29 @@ def check_desktop(page: Page) -> None:
     check("Esc closes the viewer", page.locator("dialog.viewer").count() == 0)
     check("panel still open after the viewer", panel.is_visible())
 
-    # Source action: "Ir al eje" scrolls to the axis of the source.
+    # Source action: "Ir al eje" navigates to the axis page of the source.
     ir_eje = panel.get_by_role("button", name="Ir al eje").first
     check("sources offer 'Ir al eje'", ir_eje.count() == 1)
     ir_eje.click()
-    page.wait_for_function("/#eje-[1-4]$/.test(location.hash)")
-    check("'Ir al eje' updates the URL hash", re.search(r"#eje-[1-4]$", page.url) is not None, page.url)
+    page.wait_for_function("/^\/eje\/eje-[1-4]$/.test(location.pathname)")
+    check("'Ir al eje' navigates to /eje/eje-N", re.search(r"/eje/eje-[1-4]$", page.url) is not None, page.url)
+    check("assistant panel survives navigation", panel.is_visible())
+    check("conversation kept after navigation", panel.locator(".assistant__msg").count() >= 2)
 
     # Navigation intent: executes the action and confirms it.
     ask(page, "Llévame al Eje 3")
-    page.wait_for_function("location.hash === '#eje-3'")
-    page.wait_for_function("(() => { const t = document.querySelector('#eje-3').getBoundingClientRect().top; return t >= -2 && t <= 200; })()")
-    check("intent scrolls to the axis section", True)
+    page.wait_for_function("location.pathname === '/eje/eje-3'")
+    page.locator("h1:visible", has_text="Eje 3").wait_for()
+    check("intent navigates to the axis page", page.locator("article.poster-card:visible").count() == len(AXES[2]["posters"]))
     last_reply = panel.locator(".assistant__msg--bot").last.inner_text()
     axis3 = AXES[2]
     check("assistant confirms the axis", f"Eje 3: {axis3['name']}" in last_reply, last_reply)
 
     # Other intents: axis by name, poster by title, and catalog search.
     ask(page, "ir al eje de actividad física")
-    page.wait_for_function("location.hash === '#eje-3'")
+    page.wait_for_function("location.pathname === '/eje/eje-3'")
     ask(page, f"Abre el eje {AXES[3]['name']}")
-    page.wait_for_function("location.hash === '#eje-4'")
+    page.wait_for_function("location.pathname === '/eje/eje-4'")
     check("axis intent by name", True)
     poster = next(p for p in POSTERS if p["slug"] == "neurodetectives")
     ask(page, f"Abre el póster {poster['title']}")

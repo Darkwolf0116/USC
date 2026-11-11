@@ -126,7 +126,7 @@ def enter(page, next_param: str, expected_path: str) -> None:
 def check_entry_and_exit(page) -> None:
     enter(page, "https://evil.example/steal", "/")
     check("header greets the visitor", wait_visible(page.locator(".site-header__tools").get_by_text("Hola, Laura")))
-    check("catalog is visible after entering", wait_visible(page.locator("#eje-1").first))
+    check("home is visible after entering", wait_visible(page.locator(".axis-button").first))
     page.screenshot(path=str(SCREENSHOTS / "auth-entered-desktop.png"))
 
     response = page.request.get(BASE_URL + "/ejes/eje-4/neurodetectives.pdf", max_redirects=0)
