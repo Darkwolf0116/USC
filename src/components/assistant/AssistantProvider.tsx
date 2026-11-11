@@ -351,7 +351,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
     (action: AssistantAction, trigger: HTMLElement | null): string => {
       if (action.type === "selectCategory") {
         const category = categories.find((c) => c.slug === action.slug);
-        catalogActions.selectCategory(action.slug, { scroll: true });
+        catalogActions.selectCategory(action.slug);
         minimizeOnMobile();
         return `Listo, te llevé al eje «${category ? `Eje ${category.number}: ${category.name}` : action.slug}».`;
       }
@@ -513,7 +513,7 @@ export function AssistantProvider({ children }: { children: ReactNode }) {
 
   const goToCategory = useCallback(
     (categorySlug: string) => {
-      catalogActions.selectCategory(categorySlug, { scroll: true });
+      catalogActions.selectCategory(categorySlug);
       minimizeOnMobile();
     },
     [catalogActions, minimizeOnMobile],

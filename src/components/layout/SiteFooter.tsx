@@ -1,4 +1,4 @@
-import { CATALOG_SECTION_ID } from "@/lib/constants";
+import Link from "next/link";
 import { CategoryLink } from "@/components/catalog/CategoryLink";
 import type { Category } from "@/data/types";
 import { BrandLogo } from "./BrandLogo";
@@ -44,9 +44,9 @@ export function SiteFooter({ categories }: SiteFooterProps) {
             </h2>
             <ul className="site-footer__list">
               <li>
-                <a className="site-footer__link" href={`#${CATALOG_SECTION_ID}`}>
-                  Documentos en PDF
-                </a>
+                <Link className="site-footer__link" href="/">
+                  Inicio
+                </Link>
               </li>
               <li>
                 <a className="site-footer__link" href="/Info/logo.png">

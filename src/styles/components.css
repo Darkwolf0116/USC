@@ -324,13 +324,13 @@
   transition: background-color var(--dur-micro) var(--ease-out);
 }
 
-.menu-link[aria-current="true"] {
+.menu-link[aria-current] {
   background: var(--color-navy);
   color: var(--color-on-navy);
 }
 
 @media (hover: hover) {
-  .menu-link:hover:not([aria-current="true"]) {
+  .menu-link:hover:not([aria-current]) {
     background: var(--color-paper-2);
   }
 }
@@ -615,6 +615,88 @@
   color: var(--color-muted);
   font-size: var(--text-sm);
   font-weight: 600;
+}
+
+/* Axis page: breadcrumbs and top row, bottom navigation */
+.axis-page {
+  padding-block: var(--space-xl) var(--section-gap-s);
+}
+
+.axis-page__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
+  margin-block-end: var(--space-xl);
+}
+
+.breadcrumbs__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  list-style: none;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.breadcrumbs__list li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height);
+  color: var(--color-health);
+}
+
+.breadcrumbs [aria-current="page"] {
+  color: var(--color-ink);
+}
+
+.axis-nav {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-lg);
+  margin-block-start: var(--section-gap-s);
+  padding-block-start: var(--space-lg);
+  border-block-start: var(--rule-hair) solid var(--color-rule);
+}
+
+.axis-nav__steps,
+.axis-nav__all {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  list-style: none;
+}
+
+.axis-nav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control-height);
+  padding-inline: var(--space-md);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color var(--dur-micro) var(--ease-out);
+}
+
+.axis-nav__link[aria-current="page"] {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-on-navy);
+}
+
+@media (hover: hover) {
+  .axis-nav__link:hover:not([aria-current]) {
+    background: var(--color-paper-2);
+  }
 }
 
 .poster-grid {

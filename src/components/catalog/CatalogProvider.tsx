@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   use,
@@ -13,7 +14,6 @@ import type { Category, Poster } from "@/data/types";
 import { CATALOG_SECTION_ID } from "@/lib/constants";
 import { parseQuery, searchCatalog, type SearchGroup } from "@/lib/search";
 
-const CATEGORY_PARAM = "categoria";
 const SEARCH_DEBOUNCE_MS = 250;
 
 export interface CatalogState {
@@ -25,13 +25,9 @@ export interface CatalogState {
   viewerPoster: Poster | null;
 }
 
-export interface SelectCategoryOptions {
-  /** Scroll the axis section into view (smooth unless the user prefers reduced motion). */
-  scroll?: boolean;
-}
-
 export interface CatalogActions {
-  selectCategory: (slug: string, options?: SelectCategoryOptions) => void;
+  /** Leaves search mode and navigates to the axis page. */
+  selectCategory: (slug: string) => void;
   setQuery: (query: string) => void;
   clearQuery: () => void;
   openViewer: (poster: Poster, trigger: HTMLElement | null) => void;
@@ -76,16 +72,7 @@ export function CatalogProvider({ categories, children }: CatalogProviderProps) 
   const [searchTerm, setSearchTerm] = useState("");
   const [viewerPoster, setViewerPoster] = useState<Poster | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
-
-  // Deep link: /?categoria=eje-3 scrolls to that axis once on load (#eje-3 is handled natively).
-  useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get(CATEGORY_PARAM);
-    if (!slug || !categories.some((category) => category.slug === slug)) return;
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById(slug)?.scrollIntoView({ block: "start" });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [categories]);
+  const router = useRouter();
 
   // Debounce the search so results (and the live region) settle once, not per keystroke.
   useEffect(() => {
@@ -116,22 +103,10 @@ export function CatalogProvider({ categories, children }: CatalogProviderProps) 
     };
 
     return {
-      selectCategory: (slug, options) => {
+      selectCategory: (slug) => {
         if (!categories.some((category) => category.slug === slug)) return;
         clearQuery();
-        const url = new URL(window.location.href);
-        url.searchParams.delete(CATEGORY_PARAM);
-        window.history.replaceState(
-          window.history.state,
-          "",
-          `${url.pathname}${url.search}#${slug}`,
-        );
-        if (options?.scroll) {
-          // Wait one frame so the axis sections exist again after leaving search mode.
-          window.requestAnimationFrame(() => {
-            document.getElementById(slug)?.scrollIntoView({ block: "start" });
-          });
-        }
+        router.push(`/eje/${slug}`);
       },
       setQuery: setQueryState,
       clearQuery,
@@ -146,7 +121,7 @@ export function CatalogProvider({ categories, children }: CatalogProviderProps) 
         if (trigger) window.requestAnimationFrame(() => trigger.focus());
       },
     };
-  }, [categories]);
+  }, [categories, router]);
 
   const isSearching = searchTerm !== "";
   const announcement = isSearching
