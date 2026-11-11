@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import type { Category, Poster } from "@/data/types";
@@ -15,33 +14,9 @@ import { CATALOG_SECTION_ID } from "@/lib/constants";
 import { parseQuery, searchCatalog, type SearchGroup } from "@/lib/search";
 
 const CATEGORY_PARAM = "categoria";
-const URL_EVENT = "catalog:urlchange";
 const SEARCH_DEBOUNCE_MS = 250;
 
-/* The active category lives in the URL (?categoria=<slug>) so a presenter can share links.
-   It is read with useSyncExternalStore instead of useSearchParams: the server snapshot is the
-   default category, the page stays fully prerendered and visible without JavaScript, and no
-   Suspense boundary is needed. */
-function subscribeToUrl(onChange: () => void): () => void {
-  window.addEventListener("popstate", onChange);
-  window.addEventListener(URL_EVENT, onChange);
-  return () => {
-    window.removeEventListener("popstate", onChange);
-    window.removeEventListener(URL_EVENT, onChange);
-  };
-}
-
-function readCategoryFromUrl(): string {
-  return new URLSearchParams(window.location.search).get(CATEGORY_PARAM) ?? "";
-}
-
-function readServerCategory(): string {
-  return "";
-}
-
 export interface CatalogState {
-  /** Slug of the category shown in the tab panel. */
-  activeSlug: string;
   /** Raw text of the search field. */
   query: string;
   /** Debounced, trimmed text that drives the results. */
@@ -51,7 +26,7 @@ export interface CatalogState {
 }
 
 export interface SelectCategoryOptions {
-  /** Smooth-scroll the categories section into view after selecting. */
+  /** Scroll the axis section into view (smooth unless the user prefers reduced motion). */
   scroll?: boolean;
 }
 
@@ -65,7 +40,6 @@ export interface CatalogActions {
 
 export interface CatalogMeta {
   categories: Category[];
-  activeCategory: Category;
   totalPosters: number;
   isSearching: boolean;
   results: SearchGroup[];
@@ -98,13 +72,20 @@ interface CatalogProviderProps {
 }
 
 export function CatalogProvider({ categories, children }: CatalogProviderProps) {
-  const urlSlug = useSyncExternalStore(subscribeToUrl, readCategoryFromUrl, readServerCategory);
   const [query, setQueryState] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [viewerPoster, setViewerPoster] = useState<Poster | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
 
-  const activeCategory = categories.find((category) => category.slug === urlSlug) ?? categories[0];
+  // Deep link: /?categoria=eje-3 scrolls to that axis once on load (#eje-3 is handled natively).
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get(CATEGORY_PARAM);
+    if (!slug || !categories.some((category) => category.slug === slug)) return;
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(slug)?.scrollIntoView({ block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [categories]);
 
   // Debounce the search so results (and the live region) settle once, not per keystroke.
   useEffect(() => {
@@ -137,17 +118,19 @@ export function CatalogProvider({ categories, children }: CatalogProviderProps) 
     return {
       selectCategory: (slug, options) => {
         if (!categories.some((category) => category.slug === slug)) return;
+        clearQuery();
         const url = new URL(window.location.href);
-        url.searchParams.set(CATEGORY_PARAM, slug);
+        url.searchParams.delete(CATEGORY_PARAM);
         window.history.replaceState(
           window.history.state,
           "",
-          `${url.pathname}${url.search}${url.hash}`,
+          `${url.pathname}${url.search}#${slug}`,
         );
-        window.dispatchEvent(new Event(URL_EVENT));
-        clearQuery();
         if (options?.scroll) {
-          document.getElementById(CATALOG_SECTION_ID)?.scrollIntoView({ block: "start" });
+          // Wait one frame so the axis sections exist again after leaving search mode.
+          window.requestAnimationFrame(() => {
+            document.getElementById(slug)?.scrollIntoView({ block: "start" });
+          });
         }
       },
       setQuery: setQueryState,
@@ -171,11 +154,10 @@ export function CatalogProvider({ categories, children }: CatalogProviderProps) 
     : "";
 
   const value: CatalogContextValue = {
-    state: { activeSlug: activeCategory.slug, query, searchTerm, viewerPoster },
+    state: { query, searchTerm, viewerPoster },
     actions,
     meta: {
       categories,
-      activeCategory,
       totalPosters: categories.reduce((sum, category) => sum + category.posters.length, 0),
       isSearching,
       results: outcome.groups,

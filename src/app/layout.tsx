@@ -19,7 +19,7 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "Repositorio de Proyectos de Aula · Fisioterapia USC",
   description:
-    "Muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali: consulta los pósteres de proyectos de aula por categoría y abre el PDF completo.",
+    "Muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali: consulta los documentos de los cuatro ejes de investigación y abre el PDF completo.",
   icons: {
     icon: "/Info/logo.png",
     apple: "/Info/logo.png",

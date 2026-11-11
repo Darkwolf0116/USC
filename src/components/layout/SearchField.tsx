@@ -37,7 +37,7 @@ export function SearchField({ variant, onSubmit }: SearchFieldProps) {
       onSubmit={handleSubmit}
     >
       <label className="visually-hidden" htmlFor={inputId}>
-        Buscar proyectos
+        Buscar documentos
       </label>
       <Search className="search__icon" size={18} aria-hidden="true" />
       <input
@@ -46,7 +46,7 @@ export function SearchField({ variant, onSubmit }: SearchFieldProps) {
         type="search"
         name="q"
         value={state.query}
-        placeholder="Título, estudiante o docente"
+        placeholder="Título o eje"
         autoComplete="off"
         enterKeyHint="search"
         spellCheck={false}

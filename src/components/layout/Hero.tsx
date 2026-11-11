@@ -19,11 +19,11 @@ export function Hero() {
             Programa de Fisioterapia
           </p>
           <p className="hero__lead hero__enter" style={step(3)}>
-            Consulta los pósteres de cada asignatura y abre el PDF completo.
+            Consulta los documentos de los cuatro ejes de investigación y abre el PDF completo.
           </p>
           <div className="hero__action hero__enter" style={step(4)}>
             <a className="btn btn--primary btn--large" href={`#${CATALOG_SECTION_ID}`}>
-              Explorar Categorías
+              Explorar los ejes
               <ChevronDown size={20} aria-hidden="true" />
             </a>
           </div>

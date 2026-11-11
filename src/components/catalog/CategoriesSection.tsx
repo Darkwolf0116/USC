@@ -1,12 +1,11 @@
 "use client";
 
 import { CATALOG_SECTION_ID } from "@/lib/constants";
+import { AxisSection } from "./AxisSection";
 import { useCatalog } from "./CatalogProvider";
-import { CategoryPanel } from "./CategoryPanel";
-import { CategoryTabs } from "./CategoryTabs";
 import { SearchResults } from "./SearchResults";
 
-/** Categories area: tabs and a poster grid, or grouped search results while a query is active. */
+/** Catalog area: one section per research axis, or grouped search results while a query is active. */
 export function CategoriesSection() {
   const { meta } = useCatalog();
 
@@ -15,10 +14,10 @@ export function CategoriesSection() {
       <div className="container">
         <header className="catalog__head">
           <h2 className="catalog__title" id="catalog-title">
-            Pósteres por categoría
+            Ejes de investigación
           </h2>
           <p className="catalog__intro">
-            {meta.categories.length} categorías y {meta.totalPosters} pósteres de la muestra.
+            {meta.categories.length} ejes y {meta.totalPosters} documentos.
           </p>
         </header>
 
@@ -26,19 +25,15 @@ export function CategoriesSection() {
           {meta.announcement}
         </p>
 
-        <div className="catalog__layout">
-          {meta.isSearching ? null : (
-            <div className="catalog__index">
-              <p className="catalog__index-title" aria-hidden="true">
-                Categorías
-              </p>
-              <CategoryTabs />
-            </div>
-          )}
-          <div className="catalog__main">
-            {meta.isSearching ? <SearchResults /> : <CategoryPanel />}
+        {meta.isSearching ? (
+          <SearchResults />
+        ) : (
+          <div className="catalog__axes">
+            {meta.categories.map((category) => (
+              <AxisSection key={category.slug} category={category} />
+            ))}
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

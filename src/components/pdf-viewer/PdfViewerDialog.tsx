@@ -14,18 +14,26 @@ const EXIT_REDUCED_MS = 120;
  * Esc, backdrop click and the close button all run the same animated close.
  */
 export function PdfViewerDialog() {
-  const { state, actions } = useCatalog();
+  const { state, actions, meta } = useCatalog();
   const poster = state.viewerPoster;
   if (!poster) return null;
-  return <ViewerModal key={poster.slug} poster={poster} onClosed={actions.closeViewer} />;
+  const axis = meta.categories.find((category) =>
+    category.posters.some((candidate) => candidate.slug === poster.slug),
+  );
+  const pages = `${poster.pages} ${poster.pages === 1 ? "página" : "páginas"}`;
+  const subtitle = axis ? `Eje ${axis.number}: ${axis.name}. ${pages}` : pages;
+  return (
+    <ViewerModal key={poster.slug} poster={poster} subtitle={subtitle} onClosed={actions.closeViewer} />
+  );
 }
 
 interface ViewerModalProps {
   poster: Poster;
+  subtitle: string;
   onClosed: () => void;
 }
 
-function ViewerModal({ poster, onClosed }: ViewerModalProps) {
+function ViewerModal({ poster, subtitle, onClosed }: ViewerModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closingRef = useRef(false);
 
@@ -71,7 +79,7 @@ function ViewerModal({ poster, onClosed }: ViewerModalProps) {
     >
       <PdfViewer.Root
         title={poster.title}
-        subtitle={`${poster.pages} ${poster.pages === 1 ? "página" : "páginas"}`}
+        subtitle={subtitle}
         fileUrl={poster.pdf}
         onClose={requestClose}
       >

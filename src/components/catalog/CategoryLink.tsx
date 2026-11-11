@@ -1,24 +1,22 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import { CATALOG_SECTION_ID } from "@/lib/constants";
 import { useCatalog } from "./CatalogProvider";
 
 interface CategoryLinkProps {
   slug: string;
   className?: string;
   children: ReactNode;
-  /** Runs after the category is selected, for example to close a menu. */
+  /** Runs after the axis is selected, for example to close a menu. */
   onSelect?: () => void;
 }
 
 /**
- * A real link (`?categoria=<slug>#categorias`) that works without JavaScript.
- * With JavaScript it selects the category in place and scrolls to the section.
+ * A real in-page link (`#eje-N`) that works without JavaScript.
+ * With JavaScript it also leaves search mode first, so the section exists before scrolling.
  */
 export function CategoryLink({ slug, className, children, onSelect }: CategoryLinkProps) {
-  const { state, actions, meta } = useCatalog();
-  const current = !meta.isSearching && state.activeSlug === slug;
+  const { actions } = useCatalog();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.defaultPrevented || event.button !== 0) return;
@@ -29,12 +27,7 @@ export function CategoryLink({ slug, className, children, onSelect }: CategoryLi
   };
 
   return (
-    <a
-      className={className}
-      href={`?categoria=${slug}#${CATALOG_SECTION_ID}`}
-      aria-current={current ? "true" : undefined}
-      onClick={handleClick}
-    >
+    <a className={className} href={`#${slug}`} onClick={handleClick}>
       {children}
     </a>
   );

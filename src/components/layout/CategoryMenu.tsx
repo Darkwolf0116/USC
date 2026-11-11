@@ -6,7 +6,7 @@ import { useCatalog } from "@/components/catalog/CatalogProvider";
 import { CategoryLink } from "@/components/catalog/CategoryLink";
 
 /**
- * Desktop "Categorías" dropdown built on the Popover API: light dismiss (outside click),
+ * Desktop "Ejes" dropdown built on the Popover API: light dismiss (outside click),
  * Esc to close and top-layer stacking come from the platform.
  */
 export function CategoryMenu() {
@@ -41,7 +41,7 @@ export function CategoryMenu() {
         aria-expanded={open}
         aria-controls={popoverId}
       >
-        Categorías
+        Ejes
         <ChevronDown size={18} aria-hidden="true" />
       </button>
       <div id={popoverId} ref={popoverRef} className="menu-popover" popover="auto" onToggle={handleToggle}>
@@ -53,7 +53,7 @@ export function CategoryMenu() {
                 className="menu-link"
                 onSelect={() => popoverRef.current?.hidePopover()}
               >
-                {category.name}
+                Eje {category.number}: {category.name}
               </CategoryLink>
             </li>
           ))}

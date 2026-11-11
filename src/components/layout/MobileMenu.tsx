@@ -8,7 +8,7 @@ import { CategoryLink } from "@/components/catalog/CategoryLink";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import { SearchField } from "./SearchField";
 
-/** Small-screen menu: a native dialog drawer with the search field and the category list. */
+/** Small-screen menu: a native dialog drawer with the search field and the axis list. */
 export function MobileMenu() {
   const { meta } = useCatalog();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -33,7 +33,7 @@ export function MobileMenu() {
       <button
         type="button"
         className="btn btn--quiet btn--icon site-header__menu"
-        aria-label="Abrir menú de categorías y búsqueda"
+        aria-label="Abrir menú de ejes y búsqueda"
         aria-haspopup="dialog"
         onClick={open}
       >
@@ -49,7 +49,7 @@ export function MobileMenu() {
       >
         <div className="drawer__head">
           <h2 className="drawer__title" id={titleId}>
-            Categorías y búsqueda
+            Ejes y búsqueda
           </h2>
           <button
             type="button"
@@ -66,7 +66,7 @@ export function MobileMenu() {
             {meta.categories.map((category) => (
               <li key={category.slug}>
                 <CategoryLink slug={category.slug} className="menu-link" onSelect={close}>
-                  {category.name}
+                  Eje {category.number}: {category.name}
                 </CategoryLink>
               </li>
             ))}

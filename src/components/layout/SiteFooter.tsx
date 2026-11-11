@@ -19,20 +19,19 @@ export function SiteFooter({ categories }: SiteFooterProps) {
             <p className="site-footer__name">Universidad Santiago de Cali - Facultad de Salud</p>
             <p className="site-footer__program">Programa de Fisioterapia</p>
             <p className="site-footer__note">
-              Mockup académico de proyectos de aula. Los nombres de estudiantes y docentes, los
-              títulos y los pósteres son ilustrativos y no corresponden a personas ni trabajos reales.
+              Documentos de investigación del Programa de Fisioterapia, organizados en cuatro ejes.
             </p>
           </div>
 
           <nav aria-labelledby="footer-categories">
             <h2 className="site-footer__heading" id="footer-categories">
-              Categorías
+              Ejes de investigación
             </h2>
             <ul className="site-footer__list">
               {categories.map((category) => (
                 <li key={category.slug}>
                   <CategoryLink slug={category.slug} className="site-footer__link">
-                    {category.name}
+                    Eje {category.number}: {category.name}
                   </CategoryLink>
                 </li>
               ))}
@@ -41,12 +40,12 @@ export function SiteFooter({ categories }: SiteFooterProps) {
 
           <nav aria-labelledby="footer-folders">
             <h2 className="site-footer__heading" id="footer-folders">
-              Carpetas del proyecto
+              Enlaces
             </h2>
             <ul className="site-footer__list">
               <li>
                 <a className="site-footer__link" href={`#${CATALOG_SECTION_ID}`}>
-                  Pósteres en PDF
+                  Documentos en PDF
                 </a>
               </li>
               <li>
@@ -65,7 +64,7 @@ export function SiteFooter({ categories }: SiteFooterProps) {
           </nav>
         </div>
 
-        <p className="site-footer__bottom">2026. Mockup académico, Programa de Fisioterapia.</p>
+        <p className="site-footer__bottom">2026. Programa de Fisioterapia, Universidad Santiago de Cali.</p>
       </div>
     </footer>
   );
