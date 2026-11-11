@@ -13,7 +13,6 @@ export function CategoryPanel() {
     <div id={TAB_PANEL_ID} role="tabpanel" aria-labelledby={tabId(category.slug)} tabIndex={-1}>
       <header className="panel__head">
         <h2 className="panel__title">{category.name}</h2>
-        <p className="panel__description">{category.description}</p>
         <p className="panel__count">
           {count} {count === 1 ? "póster" : "pósteres"}
         </p>

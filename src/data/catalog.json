@@ -1,351 +1,507 @@
 {
   "categories": [
     {
-      "slug": "fundamentos-teoricos-en-fisioterapia",
-      "name": "Fundamentos Teóricos en Fisioterapia",
-      "description": "Marcos conceptuales, historia y modelos de la profesión que orientan el razonamiento clínico del fisioterapeuta.",
+      "slug": "eje-1",
+      "number": 1,
+      "name": "Innovación, Tecnología y Emprendimiento",
       "posters": [
         {
-          "slug": "razonamiento-clinico-del-modelo-biomedico-al-biopsicosocial",
-          "title": "Evolución del razonamiento clínico en fisioterapia: del modelo biomédico al biopsicosocial",
-          "students": ["Laura Camila Restrepo", "Andrés Felipe Cardona", "Valentina Ortiz Gómez"],
-          "advisor": "Ft. Marcela Quintero Rojas",
-          "semester": "2026-1",
-          "summary": "Revisión narrativa de los modelos que han guiado la toma de decisiones clínicas y de su impacto en la valoración del paciente.",
-          "pdf": "/posters/razonamiento-clinico-del-modelo-biomedico-al-biopsicosocial.pdf"
+          "slug": "artromove",
+          "title": "ARTROMOVE",
+          "pdf": "/ejes/eje-1/artromove.pdf",
+          "thumbnail": "/ejes/eje-1/artromove.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "aplicacion-de-la-cif-en-adultos-mayores",
-          "title": "Aplicación de la CIF en la valoración fisioterapéutica de adultos mayores",
-          "students": ["Daniela Martínez Cruz", "Juan Sebastián Vargas"],
-          "advisor": "Ft. Hernán Darío Valencia",
-          "semester": "2026-1",
-          "summary": "Propuesta de lista de verificación basada en la Clasificación Internacional del Funcionamiento para organizar hallazgos y objetivos de intervención.",
-          "pdf": "/posters/aplicacion-de-la-cif-en-adultos-mayores.pdf"
+          "slug": "crecer-en-movimiento-jugando-tambien-cuidamos-nuestra-salud",
+          "title": "Crecer en movimiento: jugando también cuidamos nuestra salud",
+          "pdf": "/ejes/eje-1/crecer-en-movimiento-jugando-tambien-cuidamos-nuestra-salud.pdf",
+          "thumbnail": "/ejes/eje-1/crecer-en-movimiento-jugando-tambien-cuidamos-nuestra-salud.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "autonomia-profesional-y-etica-del-fisioterapeuta",
-          "title": "Autonomía profesional y ética del fisioterapeuta en el sistema de salud colombiano",
-          "students": ["Karen Lizeth Muñoz", "Santiago Rivera Pino", "Mariana Cabrera", "Esteban Londoño"],
-          "advisor": "Ft. Natalia Giraldo Peña",
-          "semester": "2026-2",
-          "summary": "Análisis de casos sobre dilemas éticos frecuentes en la práctica y su relación con el marco normativo de la profesión.",
-          "pdf": "/posters/autonomia-profesional-y-etica-del-fisioterapeuta.pdf"
+          "slug": "rehabconecta",
+          "title": "REHABCONECTA",
+          "pdf": "/ejes/eje-1/rehabconecta.pdf",
+          "thumbnail": "/ejes/eje-1/rehabconecta.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "orienta-fundamentos-grupo-d-actualizado",
+          "title": "Orienta Fundamentos Grupo D actualizado",
+          "pdf": "/ejes/eje-1/orienta-fundamentos-grupo-d-actualizado.pdf",
+          "thumbnail": "/ejes/eje-1/orienta-fundamentos-grupo-d-actualizado.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "adulto-mayor-viviendo-con-autonomia",
+          "title": "Adulto Mayor: Viviendo con Autonomía",
+          "pdf": "/ejes/eje-1/adulto-mayor-viviendo-con-autonomia.pdf",
+          "thumbnail": "/ejes/eje-1/adulto-mayor-viviendo-con-autonomia.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "fisiobreak-24-7",
+          "title": "FisioBreak 24/7",
+          "pdf": "/ejes/eje-1/fisiobreak-24-7.pdf",
+          "thumbnail": "/ejes/eje-1/fisiobreak-24-7.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "vitalhome",
+          "title": "VITALHOME",
+          "pdf": "/ejes/eje-1/vitalhome.pdf",
+          "thumbnail": "/ejes/eje-1/vitalhome.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "conecta-y-muevete",
+          "title": "Conecta y muevete",
+          "pdf": "/ejes/eje-1/conecta-y-muevete.pdf",
+          "thumbnail": "/ejes/eje-1/conecta-y-muevete.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "movitech",
+          "title": "Movitech",
+          "pdf": "/ejes/eje-1/movitech.pdf",
+          "thumbnail": "/ejes/eje-1/movitech.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "cuidando-espaldas-pequenas",
+          "title": "Cuidando espaldas pequeñas",
+          "pdf": "/ejes/eje-1/cuidando-espaldas-pequenas.pdf",
+          "thumbnail": "/ejes/eje-1/cuidando-espaldas-pequenas.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "muevete-a-tu-manera",
+          "title": "Muévete a tu manera",
+          "pdf": "/ejes/eje-1/muevete-a-tu-manera.pdf",
+          "thumbnail": "/ejes/eje-1/muevete-a-tu-manera.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "espalda-en-movimiento",
+          "title": "Espalda en movimiento",
+          "pdf": "/ejes/eje-1/espalda-en-movimiento.pdf",
+          "thumbnail": "/ejes/eje-1/espalda-en-movimiento.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "offline",
+          "title": "OFFLINE",
+          "pdf": "/ejes/eje-1/offline.pdf",
+          "thumbnail": "/ejes/eje-1/offline.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "fisioeduca-rural",
+          "title": "FisioEduca Rural",
+          "pdf": "/ejes/eje-1/fisioeduca-rural.pdf",
+          "thumbnail": "/ejes/eje-1/fisioeduca-rural.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "pasaporte-del-movimiento",
+          "title": "Pasaporte del movimiento",
+          "pdf": "/ejes/eje-1/pasaporte-del-movimiento.pdf",
+          "thumbnail": "/ejes/eje-1/pasaporte-del-movimiento.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "futbol-perfom",
+          "title": "Fútbol Perfom",
+          "pdf": "/ejes/eje-1/futbol-perfom.pdf",
+          "thumbnail": "/ejes/eje-1/futbol-perfom.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "pausar-para-avanzar",
+          "title": "Pausar para Avanzar",
+          "pdf": "/ejes/eje-1/pausar-para-avanzar.pdf",
+          "thumbnail": "/ejes/eje-1/pausar-para-avanzar.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "muevete-kids",
+          "title": "Muevete Kids",
+          "pdf": "/ejes/eje-1/muevete-kids.pdf",
+          "thumbnail": "/ejes/eje-1/muevete-kids.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "reactiva",
+          "title": "REACTIVA",
+          "pdf": "/ejes/eje-1/reactiva.pdf",
+          "thumbnail": "/ejes/eje-1/reactiva.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "pequenos-en-movimiento",
+          "title": "Pequeños En Movimiento",
+          "pdf": "/ejes/eje-1/pequenos-en-movimiento.pdf",
+          "thumbnail": "/ejes/eje-1/pequenos-en-movimiento.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "rompe-la-rutina",
+          "title": "ROMPE LA RUTINA",
+          "pdf": "/ejes/eje-1/rompe-la-rutina.pdf",
+          "thumbnail": "/ejes/eje-1/rompe-la-rutina.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "prevencion-de-caidas-en-adultos-mayores",
+          "title": "Prevención de caídas en adultos mayores",
+          "pdf": "/ejes/eje-1/prevencion-de-caidas-en-adultos-mayores.pdf",
+          "thumbnail": "/ejes/eje-1/prevencion-de-caidas-en-adultos-mayores.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "sentidos-en-movimiento",
+          "title": "Sentidos en Movimiento",
+          "pdf": "/ejes/eje-1/sentidos-en-movimiento.pdf",
+          "thumbnail": "/ejes/eje-1/sentidos-en-movimiento.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "previmov360",
+          "title": "Previmov360",
+          "pdf": "/ejes/eje-1/previmov360.pdf",
+          "thumbnail": "/ejes/eje-1/previmov360.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "sarac-sistema-de-alerta-de-riesgo-de-caidas-en-adultos-mayores",
+          "title": "SARAC: Sistema de alerta de riesgo de caídas en adultos mayores",
+          "pdf": "/ejes/eje-1/sarac-sistema-de-alerta-de-riesgo-de-caidas-en-adultos-mayores.pdf",
+          "thumbnail": "/ejes/eje-1/sarac-sistema-de-alerta-de-riesgo-de-caidas-en-adultos-mayores.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         }
       ]
     },
     {
-      "slug": "bases-morfofuncionales-neuromuscular",
-      "name": "Bases Morfofuncionales Neuromuscular",
-      "description": "Estructura y función del sistema nervioso y muscular que sustentan el control del movimiento.",
+      "slug": "eje-2",
+      "number": 2,
+      "name": "Funcionamiento Humano, Discapacidad y Procesos de Rehabilitación",
       "posters": [
         {
-          "slug": "unidad-motora-y-reclutamiento-de-fibras-musculares",
-          "title": "Unidad motora y reclutamiento de fibras musculares durante la contracción voluntaria",
-          "students": ["Paula Andrea Henao", "Cristian David Soto", "Luisa Fernanda Arias"],
-          "advisor": "Ft. Julián Esteban Mora",
-          "semester": "2026-1",
-          "summary": "Material didáctico que explica el principio de tamaño y su aplicación al diseño de ejercicios de fortalecimiento.",
-          "pdf": "/posters/unidad-motora-y-reclutamiento-de-fibras-musculares.pdf"
+          "slug": "como-evaluar-y-predecir-la-recuperacion-despues-de-un-acv",
+          "title": "¿Cómo evaluar y predecir la recuperación después de un ACV?",
+          "pdf": "/ejes/eje-2/como-evaluar-y-predecir-la-recuperacion-despues-de-un-acv.pdf",
+          "thumbnail": "/ejes/eje-2/como-evaluar-y-predecir-la-recuperacion-despues-de-un-acv.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "plasticidad-neuronal-tras-lesion-medular-incompleta",
-          "title": "Plasticidad neuronal y recuperación funcional tras lesión medular incompleta",
-          "students": ["Tatiana Escobar", "Felipe Alejandro Cortés"],
-          "advisor": "Ft. Diana Carolina Salazar",
-          "semester": "2026-2",
-          "summary": "Síntesis de evidencia sobre mecanismos de reorganización neural y su papel en la rehabilitación temprana.",
-          "pdf": "/posters/plasticidad-neuronal-tras-lesion-medular-incompleta.pdf"
+          "slug": "abordaje-fisioterapeutico-del-sindrome-de-guillain-barre-revision-de-la-evidenci",
+          "title": "Abordaje Fisioterapéutico del Síndrome de Guillain-Barré Revisión de la Evidencia",
+          "pdf": "/ejes/eje-2/abordaje-fisioterapeutico-del-sindrome-de-guillain-barre-revision-de-la-evidenci.pdf",
+          "thumbnail": "/ejes/eje-2/abordaje-fisioterapeutico-del-sindrome-de-guillain-barre-revision-de-la-evidenci.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 12
         },
         {
-          "slug": "reflejos-osteotendinosos-bases-y-exploracion",
-          "title": "Reflejos osteotendinosos: bases neurofisiológicas y técnica de exploración",
-          "students": ["Natalia Bedoya", "Miguel Ángel Ruiz", "Sara Isabel Quintana", "Daniel Ospina"],
-          "advisor": "Ft. Julián Esteban Mora",
-          "semester": "2026-1",
-          "summary": "Guía ilustrada del arco reflejo y de la secuencia de exploración con criterios para registrar respuestas normales y alteradas.",
-          "pdf": "/posters/reflejos-osteotendinosos-bases-y-exploracion.pdf"
+          "slug": "aplicabilidad-del-rps-form-una-revision-de-alcance",
+          "title": "Aplicabilidad del RPS-Form Una revisión de alcance",
+          "pdf": "/ejes/eje-2/aplicabilidad-del-rps-form-una-revision-de-alcance.pdf",
+          "thumbnail": "/ejes/eje-2/aplicabilidad-del-rps-form-una-revision-de-alcance.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "core-sets-de-la-cif-en-la-evaluacion-del-funcionamiento-fisioterapeutico",
+          "title": "Core Sets de la CIF en la evaluación del funcionamiento fisioterapéutico",
+          "pdf": "/ejes/eje-2/core-sets-de-la-cif-en-la-evaluacion-del-funcionamiento-fisioterapeutico.pdf",
+          "thumbnail": "/ejes/eje-2/core-sets-de-la-cif-en-la-evaluacion-del-funcionamiento-fisioterapeutico.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 679,
+          "pages": 1
+        },
+        {
+          "slug": "el-rol-del-fisioterapeuta-en-seguridad-y-salud-en-el-trabajo",
+          "title": "El rol del fisioterapeuta en seguridad y salud en el trabajo",
+          "pdf": "/ejes/eje-2/el-rol-del-fisioterapeuta-en-seguridad-y-salud-en-el-trabajo.pdf",
+          "thumbnail": "/ejes/eje-2/el-rol-del-fisioterapeuta-en-seguridad-y-salud-en-el-trabajo.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "espasticidad-rango-articular-y-desempeno-funcional-en-personas-con-secuelas-de-a",
+          "title": "Espasticidad, rango articular y desempeño funcional en personas con secuelas de ACV",
+          "pdf": "/ejes/eje-2/espasticidad-rango-articular-y-desempeno-funcional-en-personas-con-secuelas-de-a.pdf",
+          "thumbnail": "/ejes/eje-2/espasticidad-rango-articular-y-desempeno-funcional-en-personas-con-secuelas-de-a.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "hidroterapia-y-rehabilitacion-acuatica",
+          "title": "Hidroterapia y rehabilitación acuática",
+          "pdf": "/ejes/eje-2/hidroterapia-y-rehabilitacion-acuatica.pdf",
+          "thumbnail": "/ejes/eje-2/hidroterapia-y-rehabilitacion-acuatica.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "importancia-biomecanica-del-core",
+          "title": "Importancia biomecanica del core",
+          "pdf": "/ejes/eje-2/importancia-biomecanica-del-core.pdf",
+          "thumbnail": "/ejes/eje-2/importancia-biomecanica-del-core.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "mas-alla-de-la-observacion-clinica-nuevas-herramientas-para-evaluar-y-anticipar",
+          "title": "Más allá de la observación clínica nuevas herramientas para evaluar y anticipar la progresión funcional en la enfermedad de Parkinson",
+          "pdf": "/ejes/eje-2/mas-alla-de-la-observacion-clinica-nuevas-herramientas-para-evaluar-y-anticipar.pdf",
+          "thumbnail": "/ejes/eje-2/mas-alla-de-la-observacion-clinica-nuevas-herramientas-para-evaluar-y-anticipar.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "proceso-de-rehabilitacion-en-paciente-con-esclerosis-multiple-en-etapa-inicial",
+          "title": "Proceso de Rehabilitación en paciente con Esclerosis Múltiple en etapa inicial",
+          "pdf": "/ejes/eje-2/proceso-de-rehabilitacion-en-paciente-con-esclerosis-multiple-en-etapa-inicial.pdf",
+          "thumbnail": "/ejes/eje-2/proceso-de-rehabilitacion-en-paciente-con-esclerosis-multiple-en-etapa-inicial.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "protocolos-de-liberacion-de-la-ventilacion-mecanica",
+          "title": "Protocolos de liberación de la ventilación mecánica",
+          "pdf": "/ejes/eje-2/protocolos-de-liberacion-de-la-ventilacion-mecanica.pdf",
+          "thumbnail": "/ejes/eje-2/protocolos-de-liberacion-de-la-ventilacion-mecanica.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 725,
+          "pages": 1
+        },
+        {
+          "slug": "psicomotricidad-y-desarrollo-psicomotor-en-ninos-de-3-a-8-anos-con-alteraciones",
+          "title": "Psicomotricidad y desarrollo psicomotor en niños de 3 a 8 años con alteraciones del neurodesarrollo",
+          "pdf": "/ejes/eje-2/psicomotricidad-y-desarrollo-psicomotor-en-ninos-de-3-a-8-anos-con-alteraciones.pdf",
+          "thumbnail": "/ejes/eje-2/psicomotricidad-y-desarrollo-psicomotor-en-ninos-de-3-a-8-anos-con-alteraciones.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "relacion-entre-la-velocidad-de-la-marcha-y-el-riesgo-de-caidas-en-adultos-mayore",
+          "title": "Relación entre la velocidad de la marcha y el riesgo de caídas en adultos mayores revisión de la evidencia científica",
+          "pdf": "/ejes/eje-2/relacion-entre-la-velocidad-de-la-marcha-y-el-riesgo-de-caidas-en-adultos-mayore.pdf",
+          "thumbnail": "/ejes/eje-2/relacion-entre-la-velocidad-de-la-marcha-y-el-riesgo-de-caidas-en-adultos-mayore.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         }
       ]
     },
     {
-      "slug": "biomecanica-del-movimiento-corporal-humano-ii",
-      "name": "Biomecánica del Movimiento Corporal Humano II",
-      "description": "Análisis de fuerzas, palancas y cinemática aplicados a gestos funcionales y deportivos.",
+      "slug": "eje-3",
+      "number": 3,
+      "name": "Actividad Física, Ejercicio y Salud",
       "posters": [
         {
-          "slug": "analisis-cinematico-de-la-marcha-en-adultos-jovenes",
-          "title": "Análisis cinemático de la marcha en adultos jóvenes mediante video bidimensional",
-          "students": ["Juliana Torres Mejía", "Brayan Steven Giraldo", "Camila Andrea Rojas"],
-          "advisor": "Ft. Camilo Andrés Arboleda",
-          "semester": "2026-2",
-          "summary": "Descripción de ángulos articulares en el ciclo de la marcha con herramientas de análisis de video de acceso libre.",
-          "pdf": "/posters/analisis-cinematico-de-la-marcha-en-adultos-jovenes.pdf"
+          "slug": "corazon-en-movimiento-actividad-fisica-para-prevenir-el-riesgo-cardiovascular",
+          "title": "CORAZÓN EN MOVIMIENTO: ACTIVIDAD FÍSICA PARA PREVENIR EL RIESGO CARDIOVASCULAR",
+          "pdf": "/ejes/eje-3/corazon-en-movimiento-actividad-fisica-para-prevenir-el-riesgo-cardiovascular.pdf",
+          "thumbnail": "/ejes/eje-3/corazon-en-movimiento-actividad-fisica-para-prevenir-el-riesgo-cardiovascular.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "carga-articular-de-rodilla-en-la-sentadilla",
-          "title": "Carga articular de la rodilla durante la sentadilla con distintas profundidades",
-          "students": ["Nicolás Agudelo", "María José Salcedo"],
-          "advisor": "Ft. Camilo Andrés Arboleda",
-          "semester": "2026-1",
-          "summary": "Comparación de momentos articulares estimados y recomendaciones de progresión para personas sanas y en readaptación.",
-          "pdf": "/posters/carga-articular-de-rodilla-en-la-sentadilla.pdf"
+          "slug": "fisioterapia-cardiopulmonar-actividad-fisica-y-salud-en-guillain-barre",
+          "title": "FISIOTERAPIA CARDIOPULMONAR, ACTIVIDAD FÍSICA Y SALUD EN GUILLAIN-BARRÉ",
+          "pdf": "/ejes/eje-3/fisioterapia-cardiopulmonar-actividad-fisica-y-salud-en-guillain-barre.pdf",
+          "thumbnail": "/ejes/eje-3/fisioterapia-cardiopulmonar-actividad-fisica-y-salud-en-guillain-barre.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "fuerzas-de-reaccion-del-suelo-en-el-salto-vertical",
-          "title": "Fuerzas de reacción del suelo en el salto vertical y prevención de lesiones de rodilla",
-          "students": ["Oscar Mauricio Ramírez", "Lina Marcela Duque", "Kevin Andrés Patiño"],
-          "advisor": "Ft. Sergio Iván Cifuentes",
-          "semester": "2026-1",
-          "summary": "Revisión de patrones de aterrizaje y de su relación con el riesgo de lesión del ligamento cruzado anterior.",
-          "pdf": "/posters/fuerzas-de-reaccion-del-suelo-en-el-salto-vertical.pdf"
+          "slug": "sedentarismo-y-salud-cardiopulmonar-importancia-de-interrumpir-periodos-prolonga",
+          "title": "Sedentarismo y salud cardiopulmonar Importancia de interrumpir periodos prolongados de sedestación",
+          "pdf": "/ejes/eje-3/sedentarismo-y-salud-cardiopulmonar-importancia-de-interrumpir-periodos-prolonga.pdf",
+          "thumbnail": "/ejes/eje-3/sedentarismo-y-salud-cardiopulmonar-importancia-de-interrumpir-periodos-prolonga.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
         },
         {
-          "slug": "biomecanica-del-hombro-en-el-lanzamiento",
-          "title": "Biomecánica del hombro durante el gesto de lanzamiento en jugadoras de voleibol",
-          "students": ["Isabella Cano", "Mateo Hurtado", "Gabriela Sinisterra"],
-          "advisor": "Ft. Sergio Iván Cifuentes",
-          "semester": "2026-2",
-          "summary": "Descripción de las fases del lanzamiento y de los factores que sobrecargan el manguito rotador.",
-          "pdf": "/posters/biomecanica-del-hombro-en-el-lanzamiento.pdf"
+          "slug": "adaptaciones-cardiovasculares-inducidas-por-la-actividad-fisica-y-el-ejercicio-b",
+          "title": "Adaptaciones cardiovasculares inducidas por la actividad física y el ejercicio: beneficios, recomendaciones y prevención del riesgo cardiovascular",
+          "pdf": "/ejes/eje-3/adaptaciones-cardiovasculares-inducidas-por-la-actividad-fisica-y-el-ejercicio-b.pdf",
+          "thumbnail": "/ejes/eje-3/adaptaciones-cardiovasculares-inducidas-por-la-actividad-fisica-y-el-ejercicio-b.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "integracion-del-control-motor-y-las-respuestas-cardiovasculares-durante-el-ejerc",
+          "title": "Integración del control motor y las respuestas cardiovasculares durante el ejercicio físico",
+          "pdf": "/ejes/eje-3/integracion-del-control-motor-y-las-respuestas-cardiovasculares-durante-el-ejerc.pdf",
+          "thumbnail": "/ejes/eje-3/integracion-del-control-motor-y-las-respuestas-cardiovasculares-durante-el-ejerc.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
+        },
+        {
+          "slug": "efectos-de-la-rehabilitacion-cardiaca-basada-en-ejercicio-fisico-sobre-la-capaci",
+          "title": "EFECTOS DE LA REHABILITACIÓN CARDÍACA BASADA EN EJERCICIO FÍSICO SOBRE LA CAPACIDAD FUNCIONAL EN PERSONAS ADULTAS CON INSUFICIENCIA CARDÍACA",
+          "pdf": "/ejes/eje-3/efectos-de-la-rehabilitacion-cardiaca-basada-en-ejercicio-fisico-sobre-la-capaci.pdf",
+          "thumbnail": "/ejes/eje-3/efectos-de-la-rehabilitacion-cardiaca-basada-en-ejercicio-fisico-sobre-la-capaci.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 576,
+          "pages": 1
+        },
+        {
+          "slug": "comportamiento-sedentario-y-factores-de-riesgo-cardiovascular-en-estudiantes-uni",
+          "title": "Comportamiento sedentario y factores de riesgo cardiovascular en estudiantes universitarios",
+          "pdf": "/ejes/eje-3/comportamiento-sedentario-y-factores-de-riesgo-cardiovascular-en-estudiantes-uni.pdf",
+          "thumbnail": "/ejes/eje-3/comportamiento-sedentario-y-factores-de-riesgo-cardiovascular-en-estudiantes-uni.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
+        },
+        {
+          "slug": "ejercicio-fisico-para-el-control-de-la-hipertension-arterial-en-adultos-mayores",
+          "title": "EJERCICIO FISICO PARA EL CONTROL DE LA HIPERTENSION ARTERIAL EN ADULTOS MAYORES",
+          "pdf": "/ejes/eje-3/ejercicio-fisico-para-el-control-de-la-hipertension-arterial-en-adultos-mayores.pdf",
+          "thumbnail": "/ejes/eje-3/ejercicio-fisico-para-el-control-de-la-hipertension-arterial-en-adultos-mayores.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
+        },
+        {
+          "slug": "actividad-fisica-sedentarismo-y-sueno-su-relacion-con-la-salud",
+          "title": "Actividad física, sedentarismo y sueño: su relación con la salud",
+          "pdf": "/ejes/eje-3/actividad-fisica-sedentarismo-y-sueno-su-relacion-con-la-salud.pdf",
+          "thumbnail": "/ejes/eje-3/actividad-fisica-sedentarismo-y-sueno-su-relacion-con-la-salud.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
+        },
+        {
+          "slug": "el-ejercicio-como-herramienta-de-prevencion-y-rehabilitacion-cardiopulmonar",
+          "title": "EL EJERCICIO COMO HERRAMIENTA DE PREVENCIÓN Y REHABILITACIÓN CARDIOPULMONAR",
+          "pdf": "/ejes/eje-3/el-ejercicio-como-herramienta-de-prevencion-y-rehabilitacion-cardiopulmonar.pdf",
+          "thumbnail": "/ejes/eje-3/el-ejercicio-como-herramienta-de-prevencion-y-rehabilitacion-cardiopulmonar.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 719,
+          "pages": 1
+        },
+        {
+          "slug": "ejercicio-fisico-como-estrategia-de-promocion-de-la-salud-en-personas-con-obesid",
+          "title": "Ejercicio Físico como estrategia de promoción de la salud en personas con obesidad y sedentarismo",
+          "pdf": "/ejes/eje-3/ejercicio-fisico-como-estrategia-de-promocion-de-la-salud-en-personas-con-obesid.pdf",
+          "thumbnail": "/ejes/eje-3/ejercicio-fisico-como-estrategia-de-promocion-de-la-salud-en-personas-con-obesid.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
+        },
+        {
+          "slug": "movimiento-para-todos-influencia-de-la-actividad-fisica-en-el-parkinson-desde-un",
+          "title": "Movimiento para todos influencia de la actividad física en el Párkinson desde una perspectiva inclusiva",
+          "pdf": "/ejes/eje-3/movimiento-para-todos-influencia-de-la-actividad-fisica-en-el-parkinson-desde-un.pdf",
+          "thumbnail": "/ejes/eje-3/movimiento-para-todos-influencia-de-la-actividad-fisica-en-el-parkinson-desde-un.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         }
       ]
     },
     {
-      "slug": "funcion-musculoesqueletica-y-tegumentaria",
-      "name": "Función Musculoesquelética y Tegumentaria",
-      "description": "Valoración y comportamiento del músculo, el hueso, la articulación y la piel en salud y enfermedad.",
+      "slug": "eje-4",
+      "number": 4,
+      "name": "Desarrollo y Control del Movimiento Humano",
       "posters": [
         {
-          "slug": "cicatrizacion-y-movilizacion-temprana",
-          "title": "Cicatrización de heridas y movilización temprana en el posoperatorio de miembro inferior",
-          "students": ["Andrea Carolina Lasso", "Jhon Alexander Prado", "Yuliana Perea"],
-          "advisor": "Ft. Liliana Patricia Mejía",
-          "semester": "2026-1",
-          "summary": "Revisión de las fases de reparación tisular y de criterios para iniciar la movilización sin comprometer la herida.",
-          "pdf": "/posters/cicatrizacion-y-movilizacion-temprana.pdf"
+          "slug": "del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-e",
+          "title": "Del cerebro al movimiento Una mirada morfofuncional al sistema nervioso Grupo E",
+          "pdf": "/ejes/eje-4/del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-e.pdf",
+          "thumbnail": "/ejes/eje-4/del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-e.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "dinamometria-de-mano-en-trabajadores",
-          "title": "Dinamometría de mano como indicador de función muscular en trabajadores administrativos",
-          "students": ["Sofía Valentina Gil", "Carlos Eduardo Montoya"],
-          "advisor": "Ft. Paola Andrea Lozano",
-          "semester": "2026-2",
-          "summary": "Protocolo de medición estandarizado y tabla de registro para seguimiento de la fuerza de prensión.",
-          "pdf": "/posters/dinamometria-de-mano-en-trabajadores.pdf"
+          "slug": "del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-f",
+          "title": "Del cerebro al movimiento Una mirada morfofuncional al sistema nervioso Grupo F",
+          "pdf": "/ejes/eje-4/del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-f.pdf",
+          "thumbnail": "/ejes/eje-4/del-cerebro-al-movimiento-una-mirada-morfofuncional-al-sistema-nervioso-grupo-f.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 1
         },
         {
-          "slug": "ulceras-por-presion-e-inmovilizacion-prolongada",
-          "title": "Piel y tejido conectivo tras inmovilización prolongada: prevención de úlceras por presión",
-          "students": ["Melissa Ordóñez", "Harold Stiven Castro", "Verónica Zapata", "Ana María Idrobo"],
-          "advisor": "Ft. Liliana Patricia Mejía",
-          "semester": "2026-1",
-          "summary": "Propuesta de plan de cambios posturales y de educación al cuidador para reducir áreas de presión.",
-          "pdf": "/posters/ulceras-por-presion-e-inmovilizacion-prolongada.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "deficiencia-neuromuscular",
-      "name": "Deficiencia Neuromuscular",
-      "description": "Abordaje fisioterapéutico de alteraciones neurológicas y neuromusculares del adulto.",
-      "posters": [
-        {
-          "slug": "hemiparesia-posterior-a-accidente-cerebrovascular",
-          "title": "Intervención fisioterapéutica en la hemiparesia posterior a un accidente cerebrovascular",
-          "students": ["Luz Adriana Cuero", "Jorge Iván Escudero", "Manuela Pineda"],
-          "advisor": "Ft. Ricardo Alonso Benítez",
-          "semester": "2026-2",
-          "summary": "Estudio de caso que describe objetivos funcionales, ejercicios orientados a tareas y seguimiento con escalas validadas.",
-          "pdf": "/posters/hemiparesia-posterior-a-accidente-cerebrovascular.pdf"
-        },
-        {
-          "slug": "espasticidad-y-escala-de-ashworth-modificada",
-          "title": "Valoración de la espasticidad con la escala de Ashworth modificada: concordancia entre evaluadores",
-          "students": ["Estefanía Rincón", "David Santiago Mosquera"],
-          "advisor": "Ft. Ricardo Alonso Benítez",
-          "semester": "2026-1",
-          "summary": "Ejercicio de práctica supervisada para identificar fuentes de variación al puntuar el tono muscular.",
-          "pdf": "/posters/espasticidad-y-escala-de-ashworth-modificada.pdf"
-        },
-        {
-          "slug": "neuropatia-periferica-diabetica-y-equilibrio",
-          "title": "Neuropatía periférica diabética y alteraciones del equilibrio: propuesta de ejercicio terapéutico",
-          "students": ["Carolina Bonilla", "Alejandro Vélez", "Dayana Mena"],
-          "advisor": "Ft. Diana Carolina Salazar",
-          "semester": "2026-2",
-          "summary": "Programa de ejercicios de equilibrio y propiocepción con progresión semanal y criterios de seguridad.",
-          "pdf": "/posters/neuropatia-periferica-diabetica-y-equilibrio.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "tecnicas-en-intervencion-fisioterapia-i-neuromuscular",
-      "name": "Técnicas en Intervención Fisioterapia I (Neuromuscular)",
-      "description": "Técnicas manuales y de ejercicio para recuperar el control motor y la función neuromuscular.",
-      "posters": [
-        {
-          "slug": "facilitacion-neuromuscular-propioceptiva-miembro-superior",
-          "title": "Facilitación neuromuscular propioceptiva en el miembro superior: patrones y aplicación clínica",
-          "students": ["Johana Marcela Ríos", "Sebastián Calero", "Paola Nieto"],
-          "advisor": "Ft. Paola Andrea Lozano",
-          "semester": "2026-1",
-          "summary": "Demostración de los patrones diagonales con ejemplos de indicaciones, contraindicaciones y dosificación.",
-          "pdf": "/posters/facilitacion-neuromuscular-propioceptiva-miembro-superior.pdf"
-        },
-        {
-          "slug": "estabilidad-lumbopelvica-con-ejercicio-terapeutico",
-          "title": "Ejercicio terapéutico para la estabilidad lumbopélvica en personas con dolor lumbar inespecífico",
-          "students": ["Viviana Aragón", "Edwin Fernando Trujillo"],
-          "advisor": "Ft. Sergio Iván Cifuentes",
-          "semester": "2026-2",
-          "summary": "Secuencia de ejercicios de control motor con criterios de progresión y recomendaciones para el hogar.",
-          "pdf": "/posters/estabilidad-lumbopelvica-con-ejercicio-terapeutico.pdf"
-        },
-        {
-          "slug": "terapia-de-espejo-en-dolor-de-miembro-fantasma",
-          "title": "Terapia de espejo en el dolor de miembro fantasma: revisión de la evidencia y protocolo",
-          "students": ["Angie Katherine Rúa", "Luis Fernando Marín", "Isabel Cristina Naranjo"],
-          "advisor": "Ft. Natalia Giraldo Peña",
-          "semester": "2026-1",
-          "summary": "Resumen de resultados reportados y propuesta de sesiones breves con registro del dolor percibido.",
-          "pdf": "/posters/terapia-de-espejo-en-dolor-de-miembro-fantasma.pdf"
-        },
-        {
-          "slug": "neurodinamia-en-sindrome-del-tunel-del-carpo",
-          "title": "Técnicas de neurodinamia en el síndrome del túnel del carpo",
-          "students": ["Michelle Ayala", "Wilson Andrés Tascón"],
-          "advisor": "Ft. Paola Andrea Lozano",
-          "semester": "2026-2",
-          "summary": "Descripción de las movilizaciones del nervio mediano, pruebas de provocación y signos de alarma.",
-          "pdf": "/posters/neurodinamia-en-sindrome-del-tunel-del-carpo.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "tecnicas-en-intervencion-fisioterapia-ii-cardiopulmonar",
-      "name": "Técnicas en Intervención Fisioterapia II (Cardiopulmonar)",
-      "description": "Evaluación y tratamiento de las alteraciones cardiovasculares y respiratorias.",
-      "posters": [
-        {
-          "slug": "rehabilitacion-cardiaca-fase-ii",
-          "title": "Rehabilitación cardiaca fase II: prescripción de ejercicio aeróbico y control de la intensidad",
-          "students": ["Lorena Patricia Cuesta", "Andrés Mauricio Reyes", "Silvia Camacho"],
-          "advisor": "Ft. Hernán Darío Valencia",
-          "semester": "2026-1",
-          "summary": "Esquema de sesión con calentamiento, trabajo aeróbico y vuelta a la calma, con signos de suspensión del ejercicio.",
-          "pdf": "/posters/rehabilitacion-cardiaca-fase-ii.pdf"
-        },
-        {
-          "slug": "higiene-bronquial-en-epoc",
-          "title": "Técnicas de higiene bronquial en pacientes con enfermedad pulmonar obstructiva crónica",
-          "students": ["Johan Camilo Salgado", "Daniela Alzate"],
-          "advisor": "Ft. Liliana Patricia Mejía",
-          "semester": "2026-2",
-          "summary": "Comparación de técnicas de depuración de secreciones y criterios para elegir la más adecuada según el caso.",
-          "pdf": "/posters/higiene-bronquial-en-epoc.pdf"
-        },
-        {
-          "slug": "entrenamiento-muscular-inspiratorio-en-adultos-mayores",
-          "title": "Entrenamiento muscular inspiratorio en adultos mayores con disnea de esfuerzo",
-          "students": ["Beatriz Elena Cardozo", "Mauricio Lenis", "Fabiana Solís", "Ricardo Jaramillo"],
-          "advisor": "Ft. Hernán Darío Valencia",
-          "semester": "2026-2",
-          "summary": "Protocolo con dispositivo de carga umbral, progresión de la resistencia y registro de la percepción del esfuerzo.",
-          "pdf": "/posters/entrenamiento-muscular-inspiratorio-en-adultos-mayores.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "administracion-y-gestion-en-ft",
-      "name": "Administración y Gestión en FT",
-      "description": "Planeación, calidad y gestión de servicios de fisioterapia en distintos contextos.",
-      "posters": [
-        {
-          "slug": "indicadores-de-calidad-en-servicio-ambulatorio",
-          "title": "Indicadores de calidad y satisfacción en un servicio ambulatorio de fisioterapia",
-          "students": ["Jessica Paola Vidal", "Armando José Palacios", "Kelly Johana Mondragón"],
-          "advisor": "Ft. Ricardo Alonso Benítez",
-          "semester": "2026-1",
-          "summary": "Diseño de un tablero de indicadores de oportunidad, adherencia y satisfacción con fichas técnicas de cada uno.",
-          "pdf": "/posters/indicadores-de-calidad-en-servicio-ambulatorio.pdf"
-        },
-        {
-          "slug": "plan-de-gestion-centro-de-fisioterapia-comunitario",
-          "title": "Plan de gestión para un centro de fisioterapia comunitario en Cali",
-          "students": ["Tomás Rengifo", "Juliana Cárdenas"],
-          "advisor": "Ft. Natalia Giraldo Peña",
-          "semester": "2026-2",
-          "summary": "Propuesta de organización, talento humano y rutas de atención para ampliar el acceso a la rehabilitación.",
-          "pdf": "/posters/plan-de-gestion-centro-de-fisioterapia-comunitario.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "practica-infancia",
-      "name": "Práctica Infancia",
-      "description": "Intervención fisioterapéutica en niños y adolescentes, con enfoque familiar y de desarrollo.",
-      "posters": [
-        {
-          "slug": "analisis-de-la-marcha-en-pacientes-pediatricos-con-paralisis-cerebral",
-          "title": "Análisis de la marcha en pacientes pediátricos con parálisis cerebral",
-          "students": ["Mónica Alejandra Barrera", "Cristóbal Medina", "Yurany Caicedo"],
-          "advisor": "Ft. Marcela Quintero Rojas",
-          "semester": "2026-2",
-          "summary": "Observación estructurada de la marcha según nivel funcional y sugerencias de intervención para mejorar la independencia.",
-          "pdf": "/posters/analisis-de-la-marcha-en-pacientes-pediatricos-con-paralisis-cerebral.pdf"
-        },
-        {
-          "slug": "estimulacion-motriz-temprana-en-prematuros",
-          "title": "Estimulación motriz temprana en lactantes nacidos prematuros: guía para cuidadores",
-          "students": ["Laura Sofía Jiménez", "Pedro Pablo Vallejo"],
-          "advisor": "Ft. Marcela Quintero Rojas",
-          "semester": "2026-1",
-          "summary": "Recomendaciones de posicionamiento y juego que favorecen el desarrollo motor durante los primeros meses.",
-          "pdf": "/posters/estimulacion-motriz-temprana-en-prematuros.pdf"
-        },
-        {
-          "slug": "juego-terapeutico-y-coordinacion-en-escolares",
-          "title": "Juego terapéutico para mejorar la coordinación motriz en escolares",
-          "students": ["Karol Dayana Henríquez", "Samuel Ortega", "Nathalia Bermúdez"],
-          "advisor": "Ft. Diana Carolina Salazar",
-          "semester": "2026-2",
-          "summary": "Circuito de actividades lúdicas con metas por sesión y pautas de coordinación con docentes de aula.",
-          "pdf": "/posters/juego-terapeutico-y-coordinacion-en-escolares.pdf"
-        }
-      ]
-    },
-    {
-      "slug": "practica-de-seguridad-en-salud-y-trabajo",
-      "name": "Práctica de Seguridad en Salud y Trabajo",
-      "description": "Prevención de lesiones y promoción de la salud en el entorno laboral.",
-      "posters": [
-        {
-          "slug": "ergonomia-en-oficina-y-trastornos-osteomusculares",
-          "title": "Ergonomía en el puesto de oficina y prevención de trastornos osteomusculares",
-          "students": ["Adriana Lucía Mazo", "Leonardo Fabio Grueso", "Estela Banguera"],
-          "advisor": "Ft. Camilo Andrés Arboleda",
-          "semester": "2026-1",
-          "summary": "Lista de chequeo del puesto de trabajo y ajustes de bajo costo para reducir posturas sostenidas.",
-          "pdf": "/posters/ergonomia-en-oficina-y-trastornos-osteomusculares.pdf"
-        },
-        {
-          "slug": "pausas-activas-en-personal-asistencial",
-          "title": "Programa de pausas activas para personal asistencial: adherencia y percepción del dolor",
-          "students": ["Ingrid Tatiana Lozano", "Víctor Hugo Quiñones"],
-          "advisor": "Ft. Liliana Patricia Mejía",
-          "semester": "2026-2",
-          "summary": "Rutinas de cinco minutos adaptadas a turnos hospitalarios y estrategia para sostener la participación.",
-          "pdf": "/posters/pausas-activas-en-personal-asistencial.pdf"
-        },
-        {
-          "slug": "manejo-manual-de-cargas-en-bodegas",
-          "title": "Manejo manual de cargas en bodegas de distribución: técnica y control del riesgo",
-          "students": ["Fredy Alexander Ibarra", "Claudia Marcela Tenorio", "Brandon Mosquera"],
-          "advisor": "Ft. Sergio Iván Cifuentes",
-          "semester": "2026-1",
-          "summary": "Guía visual para levantar y transportar cargas con medidas de control organizacionales y de ingeniería.",
-          "pdf": "/posters/manejo-manual-de-cargas-en-bodegas.pdf"
+          "slug": "neurodetectives",
+          "title": "Neurodetectives",
+          "pdf": "/ejes/eje-4/neurodetectives.pdf",
+          "thumbnail": "/ejes/eje-4/neurodetectives.webp",
+          "thumbnailWidth": 480,
+          "thumbnailHeight": 720,
+          "pages": 13
         }
       ]
     }

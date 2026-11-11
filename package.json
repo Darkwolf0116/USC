@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "posters": "node scripts/generate-posters.mjs",
     "pdfjs-assets": "node scripts/copy-pdfjs-assets.mjs",
-    "rag:index": "node scripts/build-rag-index.mjs"
+    "rag:index": "node scripts/build-rag-index.mjs",
+    "axes": "node scripts/build-axes.mjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^4.3.2",

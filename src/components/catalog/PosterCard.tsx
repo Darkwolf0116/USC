@@ -25,24 +25,6 @@ export function PosterCard({ poster, terms = [] }: PosterCardProps) {
         <h3 className="poster-card__title">
           <Highlight text={poster.title} terms={terms} />
         </h3>
-        <div className="poster-card__meta">
-          <p>
-            <strong>Estudiantes:</strong>{" "}
-            {poster.students.map((student, index) => (
-              <span key={student}>
-                {index > 0 ? ", " : ""}
-                <Highlight text={student} terms={terms} />
-              </span>
-            ))}
-          </p>
-          <p>
-            <strong>Docente:</strong> <Highlight text={poster.advisor} terms={terms} />
-          </p>
-          <p>
-            <strong>Semestre:</strong> <span className="num">{poster.semester}</span>
-          </p>
-        </div>
-        <p className="poster-card__summary">{poster.summary}</p>
       </div>
 
       <div className="poster-card__actions">

@@ -56,3 +56,6 @@ next-env.d.ts
 
 # local model cache for the RAG index builder
 /.cache/
+
+# source drop folder for research-axis PDFs (imported by `npm run axes`)
+/Ejes/

@@ -92,12 +92,10 @@ export interface SearchOutcome {
 }
 
 function haystack(poster: Poster, category: Category): string {
-  return normalize(
-    [poster.title, ...poster.students, poster.advisor, category.name].join(" "),
-  );
+  return normalize([poster.title, `eje ${category.number}`, category.name].join(" "));
 }
 
-/** Finds posters whose title, students, advisor or category name contain every term. */
+/** Finds documents whose title or axis (number and name) contain every term. */
 export function searchCatalog(categories: Category[], query: string): SearchOutcome {
   const terms = parseQuery(query);
   if (terms.length === 0) return { groups: [], count: 0 };

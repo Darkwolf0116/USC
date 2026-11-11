@@ -71,7 +71,7 @@ function ViewerModal({ poster, onClosed }: ViewerModalProps) {
     >
       <PdfViewer.Root
         title={poster.title}
-        subtitle={`Docente: ${poster.advisor}. Semestre ${poster.semester}`}
+        subtitle={`${poster.pages} ${poster.pages === 1 ? "página" : "páginas"}`}
         fileUrl={poster.pdf}
         onClose={requestClose}
       >
