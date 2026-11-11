@@ -47,7 +47,7 @@ export function AxisPage({ category }: AxisPageProps) {
           </p>
         </header>
 
-        <PosterGrid posters={category.posters} />
+        <PosterGrid posters={category.posters} categorySlug={category.slug} />
 
         <AxisNav current={category.slug} />
       </div>

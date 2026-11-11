@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useRef, type MouseEvent, type SyntheticEvent } from "react";
 import type { Poster } from "@/data/types";
+import { ReactionBar } from "@/components/reactions/ReactionBar";
 import { useCatalog } from "@/components/catalog/CatalogProvider";
+import { posterKey } from "@/lib/reactions";
 import { lockScroll, unlockScroll } from "@/lib/scroll-lock";
 import { PdfViewer } from "./PdfViewer";
 
@@ -23,17 +25,25 @@ export function PdfViewerDialog() {
   const pages = `${poster.pages} ${poster.pages === 1 ? "página" : "páginas"}`;
   const subtitle = axis ? `Eje ${axis.number}: ${axis.name}. ${pages}` : pages;
   return (
-    <ViewerModal key={poster.slug} poster={poster} subtitle={subtitle} onClosed={actions.closeViewer} />
+    <ViewerModal
+      key={poster.slug}
+      poster={poster}
+      reactionKey={axis ? posterKey(axis.slug, poster.slug) : null}
+      subtitle={subtitle}
+      onClosed={actions.closeViewer}
+    />
   );
 }
 
 interface ViewerModalProps {
   poster: Poster;
+  /** Reaction key of the poster, or null when its axis cannot be resolved. */
+  reactionKey: string | null;
   subtitle: string;
   onClosed: () => void;
 }
 
-function ViewerModal({ poster, subtitle, onClosed }: ViewerModalProps) {
+function ViewerModal({ poster, reactionKey, subtitle, onClosed }: ViewerModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const closingRef = useRef(false);
 
@@ -84,6 +94,7 @@ function ViewerModal({ poster, subtitle, onClosed }: ViewerModalProps) {
         onClose={requestClose}
       >
         <PdfViewer.Header />
+        {reactionKey ? <ReactionBar variant="viewer" posterKey={reactionKey} title={poster.title} /> : null}
         <PdfViewer.Toolbar />
         <PdfViewer.Document />
       </PdfViewer.Root>

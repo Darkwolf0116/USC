@@ -6,6 +6,7 @@ import { CatalogProvider } from "@/components/catalog/CatalogProvider";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PdfViewerDialog } from "@/components/pdf-viewer/PdfViewerDialog";
+import { ReactionsProvider } from "@/components/reactions/ReactionsProvider";
 import { categories } from "@/data/catalog";
 
 /**
@@ -15,14 +16,16 @@ import { categories } from "@/data/catalog";
 export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <CatalogProvider categories={categories}>
-      <SiteHeader />
-      {children}
-      <SiteFooter categories={categories} />
-      <PdfViewerDialog />
-      <AssistantProvider>
-        <AssistantLauncher />
-        <AssistantPanel />
-      </AssistantProvider>
+      <ReactionsProvider>
+        <SiteHeader />
+        {children}
+        <SiteFooter categories={categories} />
+        <PdfViewerDialog />
+        <AssistantProvider>
+          <AssistantLauncher />
+          <AssistantPanel />
+        </AssistantProvider>
+      </ReactionsProvider>
     </CatalogProvider>
   );
 }

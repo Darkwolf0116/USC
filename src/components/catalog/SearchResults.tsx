@@ -34,7 +34,7 @@ export function SearchResults() {
           <h2 className="results__title" id={`group-${category.slug}`}>
             <Highlight text={`Eje ${category.number}: ${category.name}`} terms={searchTerms} />
           </h2>
-          <PosterGrid posters={posters} terms={searchTerms} />
+          <PosterGrid posters={posters} categorySlug={category.slug} terms={searchTerms} />
         </section>
       ))}
       <div>

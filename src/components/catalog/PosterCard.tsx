@@ -3,17 +3,21 @@
 import Image from "next/image";
 import { Download, Eye } from "lucide-react";
 import type { Poster } from "@/data/types";
+import { ReactionBar } from "@/components/reactions/ReactionBar";
+import { posterKey } from "@/lib/reactions";
 import { useCatalog } from "./CatalogProvider";
 import { Highlight } from "./Highlight";
 
 interface PosterCardProps {
   poster: Poster;
+  /** Slug of the axis that holds the poster; part of its reaction key. */
+  categorySlug: string;
   /** Normalized search terms to highlight. Leave empty outside search results. */
   terms?: string[];
 }
 
-/** PDF card: first-page preview, the title below it, then the view and download actions. */
-export function PosterCard({ poster, terms = [] }: PosterCardProps) {
+/** PDF card: first-page preview, the title below it, then the reactions and the view and download actions. */
+export function PosterCard({ poster, categorySlug, terms = [] }: PosterCardProps) {
   const { actions } = useCatalog();
 
   return (
@@ -42,6 +46,8 @@ export function PosterCard({ poster, terms = [] }: PosterCardProps) {
         <Highlight text={poster.title} terms={terms} />
       </h3>
       {poster.pages > 1 ? <p className="poster-card__pages">{poster.pages} páginas</p> : null}
+
+      <ReactionBar variant="card" posterKey={posterKey(categorySlug, poster.slug)} title={poster.title} />
 
       <div className="poster-card__actions">
         <button

@@ -848,6 +848,88 @@
   flex: 1 1 auto;
 }
 
+/* Reaction bar: four toggle buttons with their totals. Flat, hairline border; the visitor's
+   own choice gets the health-blue border and a faint tint. Counts are always laid out
+   (blank at zero) so the buttons do not change size when the first reaction arrives. */
+.reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+}
+
+.reaction {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-block-size: var(--control-height);
+  min-inline-size: var(--control-height);
+  padding-inline: var(--space-xs);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-control);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+.reaction__emoji {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.reaction__count {
+  min-inline-size: 2ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.reaction[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--color-health) 10%, var(--color-surface));
+  border-color: var(--color-health);
+}
+
+.reaction:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.reaction:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+@media (hover: hover) {
+  .reaction:hover:not(:disabled):not([aria-pressed="true"]) {
+    background: var(--color-paper-2);
+    border-color: var(--color-field-edge);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reaction:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+.reactions--viewer {
+  flex-wrap: wrap;
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-paper);
+  border-block-end: var(--rule-hair) solid var(--color-rule);
+}
+
+.reactions--viewer .reaction {
+  flex: 0 0 auto;
+  padding-inline: var(--space-sm);
+}
+
 /* Search results and empty state */
 .results {
   display: grid;
