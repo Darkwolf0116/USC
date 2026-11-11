@@ -1,6 +1,6 @@
 # Repositorio de Proyectos de Aula - Fisioterapia USC
 
-Sitio de una sola página para la muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali. Reúne los documentos de investigación en PDF de los cuatro ejes del programa, con búsqueda en vivo, visor de PDF dentro de la página y descarga directa.
+Sitio para la muestra académica del Programa de Fisioterapia de la Universidad Santiago de Cali. Reúne los documentos de investigación en PDF de los cuatro ejes del programa, con una portada (texto, video de presentación y cuatro botones), una página por eje, búsqueda en vivo, visor de PDF dentro de la página y descarga directa.
 
 Construido con Next.js 16 (App Router), React 19, Tailwind CSS v4, `react-pdf` y `lucide-react`.
 
@@ -20,16 +20,22 @@ npm run axes       # importa los PDF de Ejes/ a public/ejes y regenera src/data/
 npm run rag:index  # regenera el índice del asistente virtual (public/rag)
 ```
 
-Cada eje tiene su ancla (`#eje-1` a `#eje-4`). Los enlaces `/#eje-3` y `/?categoria=eje-3` abren la página desplazada a ese eje.
+Estructura del sitio: la portada (`/`) muestra el texto de presentación, el video y cuatro botones; cada botón abre la página de su eje (`/eje/eje-1` a `/eje/eje-4`) con sus PDF. Las páginas de eje se generan solas a partir de `src/data/catalog.json`: al agregar o quitar documentos con `npm run axes` no hay que tocar código. Los enlaces antiguos `/#eje-3` y `/?categoria=eje-3` redirigen a `/eje/eje-3`.
+
+### Reemplazar el video de la portada
+
+El video es `public/video/introduccion.mp4` (H.264 + AAC para que reproduzca en todos los navegadores). Para cambiarlo, reemplace ese archivo conservando el nombre. La carpeta `Video/` de la raíz es solo la fuente local y está ignorada por git, igual que `Ejes/`. El video no tiene subtítulos.
 
 ## Estructura
 
 ```
 src/
-  app/                  layout, página y estilos globales
+  app/                  layout raíz, grupo (site) con portada y /eje/[slug], acceso y API
   components/
-    catalog/            proveedor de estado, secciones por eje, tarjetas, búsqueda
-    layout/             encabezado, hero, pie de página, logotipo
+    catalog/            proveedor de estado, tarjetas, búsqueda
+    home/               introducción, video y botones de eje de la portada
+    axis/               página de eje (migas, cuadrícula de PDF, navegación entre ejes)
+    layout/             encabezado, pie de página, logotipo
     pdf-viewer/         visor compuesto (Root, Header, Toolbar, Document) y diálogo
   data/                 catalog.json (datos), catalog.ts y types.ts
   components/assistant/ asistente virtual: proveedor, lanzador y panel compuesto
@@ -39,6 +45,7 @@ src/
   styles/               tokens, base y componentes
 public/
   Info/logo.png         logotipo institucional (en minúsculas, Vercel distingue mayúsculas)
+  video/                video de presentación de la portada
   ejes/eje-N/           PDF de cada eje y su miniatura WebP (generados con npm run axes)
   rag/                  índice del asistente (index.json + vectors.bin), generado
   pdfjs/standard_fonts  fuentes que PDF.js necesita para los PDF de ejemplo
@@ -124,7 +131,7 @@ python .agents/skills/webapp-testing/scripts/with_server.py --server "node scrip
 python .agents/skills/webapp-testing/scripts/with_server.py --server "node scripts/dev-e2e.mjs" --port 3000 --timeout 180 -- python tests/e2e_axes.py
 ```
 
-Verifica las cuatro secciones, los títulos bajo cada vista previa, el acceso a cada PDF y miniatura, el visor (1 y 13 páginas), el menú Ejes, los enlaces directos, la búsqueda, el respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
+Verifica la portada (texto literal, video, cuatro botones), las cuatro páginas de eje, las migas, «Volver al inicio», eje anterior/siguiente, los enlaces antiguos, los títulos bajo cada vista previa, el acceso a cada PDF y miniatura, el visor (1 y 13 páginas), el menú Ejes, los enlaces directos, la búsqueda, el respaldo del logotipo y capturas en 375x812 y 1280x800 (se guardan en `tests/screenshots/`, ignorada por git).
 
 Para el asistente (en Chromium sin WebGPU valida el modo búsqueda, las intenciones y las acciones sobre las fuentes):
 

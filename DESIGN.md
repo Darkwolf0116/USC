@@ -85,7 +85,7 @@ Desktop (1280):
 +--------------------------------------------------------------+
 ```
 
-Alignment: everything left-aligned; the hero is one text column beside the logo tile. Search mode replaces the four sections with results grouped by axis.
+Alignment: everything left-aligned; the hero is one text column beside the logo tile. Search mode replaces the current page's content (home or axis page) with results grouped by axis.
 
 ## Principles
 
@@ -93,7 +93,7 @@ Alignment: everything left-aligned; the hero is one text column beside the logo 
 2. Navy and gold are used the way the institution uses them: navy bands carry the page, gold is a hairline, a bar and an icon color, never text on white.
 3. The document is the content: the card shows the real first page (WebP with width and height from the data, so nothing shifts), the title below it, then "Ver PDF" and "Descargar PDF". The viewer opens the real PDF in a native dialog, one or many pages.
 4. Motion answers actions: one orchestrated hero entrance (fade and 8px rise), dialog scale .96 to 1 in 420ms (exit 220ms), reduced motion falls back to a short crossfade. Only transform and opacity.
-5. Keyboard and touch first: 44px targets, instant focus ring, menu links that scroll to each axis section, Esc and backdrop close the viewer and focus returns to the trigger.
+5. Keyboard and touch first: 44px targets, instant focus ring, menu links that open each axis page, Esc and backdrop close the viewer and focus returns to the trigger.
 
 ## Assistant
 
@@ -115,8 +115,14 @@ Floating virtual assistant (in-browser RAG, see README). It adds two floating la
 
 `/acceso` is a single navy page with one white card (hairline border, no shadow): brand band in `--color-navy-2` with the logo tile and a gold rule, then a one-step form (full name and institutional email). Labels are always visible, errors sit under their field (`aria-describedby`, `aria-invalid`) in `--color-error`, and a polite live region announces progress. The signed-in user's first name and "Salir" live in the header tools and at the bottom of the mobile drawer.
 
-## Axis sections and document cards
+## Home page
 
-- The catalog wrapper keeps `id="categorias"` (hero CTA); inside it, four `<section id="eje-N" aria-labelledby>` stack in order. Each head has the axis number in `--color-health`, the axis name as h2, the count and a hairline rule. The header "Ejes" menu, drawer and footer link to `#eje-N`; scroll offset comes from `scroll-padding-top`, smooth only without reduced motion.
+- Navy intro band (`.intro`): gold bar, h1 "Investigación en Fisioterapia en Acción." and the lead paragraph, with the logo tile beside it from 60rem up. Heading and text stay above the fold at 1280x800.
+- Video below the intro: one `<video controls playsInline preload="metadata">` in a fixed 16:9 frame (hairline border, no autoplay, no layout shift), max 60rem wide, with an accessible name and a download fallback link. No captions exist yet.
+- Axis buttons (`.axis-button`): section "Explora los ejes" with a grid of four large links (1 column phone, 2 tablet, 4 desktop). Each shows "Eje N", the short name (prominent), the full axis name (secondary), the document count and an arrow. Flat card, 3px `--color-health` top rule, hover moves with transform only.
+
+## Axis page and document cards
+
+- `/eje/[slug]` (one page per axis, generated from the data): breadcrumbs "Inicio / Eje N" with the current item `aria-current="page"`, a "Volver al inicio" button, h1 with the axis number in `--color-health` and the name, the count and a hairline rule, then the poster grid. At the bottom: previous/next axis buttons (disabled at the ends), a row of all four axes with the current one marked, and a second "Volver al inicio". The header "Ejes" menu, drawer and footer link to `/eje/eje-N` and mark the current axis.
 - Card: preview button (hairline border, tinted `--color-paper-2` well, `aspect-ratio` from the data) -> h3 title clamped to 3 lines with the full text in `title` -> "N páginas" only when more than one -> actions pinned to the card bottom so rows align. Titles are cleaned file names (see `scripts/build-axes.mjs`), never raw names.
 - Thumbnails are static WebP served as-is (`unoptimized`): `/_next/image` bypasses the access gate's cookie check, so the optimizer is not used.
