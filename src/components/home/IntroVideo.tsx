@@ -5,8 +5,8 @@ export function IntroVideo() {
   return (
     <section className="intro-video" aria-labelledby="intro-video-title">
       <div className="container">
-        <h2 className="visually-hidden" id="intro-video-title">
-          Video de presentación
+        <h2 className="axis-buttons__title intro-video__title" id="intro-video-title">
+          Misión y Visión Programa de Fisioterapia
         </h2>
         <div className="intro-video__frame">
           <video
@@ -15,7 +15,7 @@ export function IntroVideo() {
             playsInline
             preload="metadata"
             src={INTRO_VIDEO_SRC}
-            aria-label="Video de presentación del Programa de Fisioterapia"
+            aria-label="Video: Misión y Visión del Programa de Fisioterapia"
           >
             Tu navegador no puede reproducir este video.{" "}
             <a href={INTRO_VIDEO_SRC} download>

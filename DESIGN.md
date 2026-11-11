@@ -117,8 +117,8 @@ Floating virtual assistant (in-browser RAG, see README). It adds two floating la
 
 ## Home page
 
-- Navy intro band (`.intro`): gold bar, h1 "Investigación en Fisioterapia en Acción." and the lead paragraph, with the logo tile beside it from 60rem up. Heading and text stay above the fold at 1280x800.
-- Video below the intro: one `<video controls playsInline preload="metadata">` in a fixed 16:9 frame (hairline border, no autoplay, no layout shift), max 60rem wide, with an accessible name and a download fallback link. No captions exist yet.
+- Navy intro band (`.intro`): gold bar, h1 "Investigación en el Aula Ágora 2026" and the lead paragraph, with the logo tile beside it from 60rem up. Heading and text stay above the fold at 1280x800.
+- Video below the intro, under a visible h2 "Misión y Visión Programa de Fisioterapia" aligned to the video width: one `<video controls playsInline preload="metadata">` in a fixed 16:9 frame (hairline border, no autoplay, no layout shift), max 60rem wide, with an accessible name and a download fallback link. No captions exist yet.
 - Axis buttons (`.axis-button`): section "Explora los ejes" with a grid of four large links (1 column phone, 2 tablet, 4 desktop). Each shows "Eje N", the short name (prominent), the full axis name (secondary), the document count and an arrow. Flat card, 3px `--color-health` top rule, hover moves with transform only.
 
 ## Axis page and document cards

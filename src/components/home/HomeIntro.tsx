@@ -7,7 +7,7 @@ export function HomeIntro() {
         <div className="intro__text">
           <span className="intro__bar" aria-hidden="true" />
           <h1 className="intro__title" id="intro-title">
-            Investigación en Fisioterapia en Acción.
+            Investigación en el Aula Ágora 2026
           </h1>
           <p className="intro__lead">
             Explora las propuestas de innovación, emprendimiento, podcasts, cartillas y pósters

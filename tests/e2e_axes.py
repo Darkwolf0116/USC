@@ -26,7 +26,8 @@ AXES = CATALOG["categories"]
 POSTERS = [poster for axis in AXES for poster in axis["posters"]]
 FORBIDDEN_TITLE = re.compile(r"_|\.pdf|^\d+[._ -]", re.IGNORECASE)
 
-H1_TEXT = "Investigación en Fisioterapia en Acción."
+H1_TEXT = "Investigación en el Aula Ágora 2026"
+VIDEO_TITLE = "Misión y Visión Programa de Fisioterapia"
 LEAD_TEXT = (
     "Explora las propuestas de innovación, emprendimiento, podcasts, cartillas y pósters científicos de "
     "nuestros estudiantes. Conoce los proyectos organizados en nuestros cuatro ejes: Innovación y Tecnología, "
@@ -131,6 +132,10 @@ def check_home(page: Page) -> None:
     check("video has a download fallback link", page.locator(f'video a[href="{VIDEO_SRC}"]').count() == 1)
     frame = page.locator(".intro-video__frame").bounding_box()
     check("video frame keeps a 16:9 ratio", frame is not None and abs(frame["width"] / frame["height"] - 16 / 9) < 0.02, str(frame))
+    video_title = page.locator("#intro-video-title")
+    check("video title is verbatim", squash(video_title.inner_text()) == VIDEO_TITLE, squash(video_title.inner_text()))
+    title_box = video_title.bounding_box()
+    check("video title sits above the video", title_box is not None and frame is not None and title_box["y"] + title_box["height"] <= frame["y"], str(title_box))
     lead_bottom = lead_box["y"] + lead_box["height"] if lead_box else 0
     check("video sits below the text", frame is not None and frame["y"] >= lead_bottom)
 

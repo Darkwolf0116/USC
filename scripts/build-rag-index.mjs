@@ -18,7 +18,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const SCRIPT_VERSION = "3";
+const SCRIPT_VERSION = "4";
 const EMBEDDING_MODEL = "Xenova/multilingual-e5-small";
 const EMBEDDING_DIM = 384;
 const CHUNK_SIZE = 650;
@@ -162,7 +162,7 @@ function pageChunks(catalog) {
     [
       "home",
       "Página principal",
-      "La página principal presenta el texto Investigación en Fisioterapia en Acción, un video de presentación del Programa de Fisioterapia y, debajo, cuatro botones, uno por cada eje de investigación. Al hacer clic en un botón se abre la página de ese eje con sus documentos en PDF.",
+      "La página principal presenta el título Investigación en el Aula Ágora 2026, el video Misión y Visión Programa de Fisioterapia y, debajo, cuatro botones, uno por cada eje de investigación. Al hacer clic en un botón se abre la página de ese eje con sus documentos en PDF.",
     ],
     [
       "navigation",

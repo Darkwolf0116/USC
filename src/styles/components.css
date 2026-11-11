@@ -533,6 +533,11 @@
   padding-block: var(--space-xl) 0;
 }
 
+.intro-video__title {
+  max-inline-size: 60rem;
+  margin-inline: auto;
+}
+
 .intro-video__frame {
   max-inline-size: 60rem;
   margin-inline: auto;
